@@ -615,7 +615,33 @@ function renderTabbar(){
   $("tabbar").innerHTML = TABS.map(([k,l])=>`<button class="${k===tab?"on":""}" onclick="goTab('${k}')">${I.tabs[k]}${k==="chats"?`<span class="dot">${CHATS.reduce((a,c)=>a+(c.unread||0),0)||""}</span>`:""}<span>${l}</span></button>`).join("");
   const d=$("tabbar").querySelector(".dot"); if(d && !d.textContent) d.remove();
 }
+let hDepth=0, ignorePops=0, fromPop=false, sheetHist=false; const SNAP=[{}], HQ=[];
+const levelOf = id => id==="s-chat"||id==="viewer" ? 1 : id==="s-catalog" ? 2 : 0;
+function hflush(){ while(HQ.length && ignorePops===0) HQ.shift()(); }
+function hq(fn){ HQ.push(fn); hflush(); }
+function syncHistory(id){
+  if(fromPop) return;
+  const L=levelOf(id), from=hDepth;
+  if(L===2 && from<1) SNAP[1]={scr:"s-chat",chat:openChatId,tab};
+  SNAP[L]={scr:id,chat:openChatId,tab};
+  hDepth=L;
+  if(L>from) hq(()=>{ for(let i=from+1;i<=L;i++) history.pushState({d:i},""); });
+  else if(L<from) hq(()=>{ ignorePops++; history.go(L-from); });
+}
+addEventListener("popstate", ()=>{
+  if(ignorePops>0){ ignorePops--; hflush(); return; }
+  if(sheetHist){ sheetHist=false; $("sheet").classList.remove("on"); $("scrim").classList.remove("on"); return; }
+  if(hDepth<=0) return;
+  hDepth--; const sn=SNAP[hDepth]||{};
+  fromPop=true;
+  try{
+    if(hDepth===0){ if(cur==="viewer") closeStatus(); else goTab(sn.tab||tab,"pop"); }
+    else if(sn.scr==="s-chat" && sn.chat) openChat(sn.chat,"pop");
+    else goTab(tab,"pop");
+  } finally { fromPop=false; }
+});
 function show(id, anim){
+  syncHistory(id);
   document.querySelectorAll(".scr.on").forEach(s=>{ if(s.id!==id){ s.classList.remove("on","push","pop"); s.querySelectorAll(".flick[data-slot]").forEach(unmount); } });
   const el=$(id); el.classList.remove("push","pop"); void el.offsetWidth; el.classList.add("on"); if(anim) el.classList.add(anim);
   cur=id;
@@ -822,7 +848,7 @@ function openCart(chat){
     <div class="tot"><span>Subtotal</span><b>${usd(cartTotal(chat))}</b></div>
     <button class="go" onclick="placeOrder('${chat}')">Place order</button>
     <small style="text-align:center">Your cart is sent to ${esc(b.name)} as a message.</small>`;
-  $("toast").classList.remove("on"); $("sheet").classList.add("on"); $("scrim").classList.add("on");
+  sheetOn();
 }
 function qty(chat,k,d){ const c=CARTS[chat]; c[k].qty+=d; if(c[k].qty<=0) c.splice(k,1); syncCart(chat); openCart(chat); }
 function placeOrder(chat){
@@ -854,7 +880,7 @@ function reviewPay(id){
     :`<div class="pm"><span class="cardic"></span><span><b>Card ending 4242</b><span>Saved payment method</span></span><em>Change</em></div>
     <button class="go" id="paybtn" onclick="pay('${id}')">Pay ${usd(o.total)}</button>
     <small style="text-align:center">Payments are processed securely. ${esc(b.name)} does not see your card details.</small>`}`;
-  $("toast").classList.remove("on"); $("sheet").classList.add("on"); $("scrim").classList.add("on");
+  sheetOn();
 }
 function pay(id){
   const o=ORDERS[id], btn=$("paybtn"); if(!o || o.paid || btn.disabled) return;
@@ -1033,14 +1059,21 @@ function openLink(brand, url){
   $("sheet").innerHTML = `<div class="grab"></div><div class="dm">${avatar(b,"s40")}<span><b>${esc(b.name)}</b><span>${esc(host)}</span></span></div>
     <p>The demo ends here. In the app this opens the product page for the option picked in the Flick.</p>
     <a href="${esc(url)}" target="_blank" rel="noopener" onclick="closeSheet()">Open ${esc(host)}</a><button class="x" onclick="closeSheet()">Close</button>`;
-  $("toast").classList.remove("on"); $("sheet").classList.add("on"); $("scrim").classList.add("on");
+  sheetOn();
 }
 function openFormats(){
   $("sheet").innerHTML = `<div class="grab"></div><h3>Explore Flicks</h3>${FORMATS.map(([k,l])=>`<button class="fbtn" onclick="closeSheet();jump('${k}')">${l}</button>`).join("")}
     <small>Concept demo by Flam. Not affiliated with or endorsed by WhatsApp, Meta or any brand shown.</small>`;
-  $("toast").classList.remove("on"); $("sheet").classList.add("on"); $("scrim").classList.add("on");
+  sheetOn();
 }
-function closeSheet(){ $("sheet").classList.remove("on"); $("scrim").classList.remove("on"); }
+function sheetOn(){
+  $("toast").classList.remove("on"); $("sheet").classList.add("on"); $("scrim").classList.add("on");
+  if(!sheetHist){ sheetHist=true; hq(()=>history.pushState({sheet:1},"")); }
+}
+function closeSheet(){
+  $("sheet").classList.remove("on"); $("scrim").classList.remove("on");
+  if(sheetHist){ sheetHist=false; hq(()=>{ ignorePops++; history.back(); }); }
+}
 function jump(k){
   if(k==="promo") openChat("nike");
   else if(k==="catalog") openCatalog("macys");
