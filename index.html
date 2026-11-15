@@ -582,7 +582,7 @@ function avatar(o, size){
   /* Looks for logos/<brand key>.png (or the brand's `logo` URL); shows the initials until a file is there. */
   return `<span class="av ${size} ${b.av.length>2?"sm":""}" style="background:${b.avc}">${esc(b.av)}<img src="${esc(b.logo||("logos/"+b.key+".png"))}" alt="" style="object-fit:contain;background:#fff" onerror="this.remove()"></span>`;
 }
-const TABS = [["chats","Chats"],["updates","Updates"],["comm","Communities"],["calls","Calls"]];
+const TABS = [["updates","Updates"],["calls","Calls"],["comm","Communities"],["chats","Chats"],["settings","Settings"]];
 let tab="chats", cur=null, cart=0;
 function renderTabbar(){
   $("tabbar").innerHTML = TABS.map(([k,l])=>`<button class="${k===tab?"on":""}" onclick="goTab('${k}')">${I.tabs[k]}${k==="chats"?`<span class="dot">${CHATS.reduce((a,c)=>a+(c.unread||0),0)||""}</span>`:""}<span>${l}</span></button>`).join("");
@@ -609,7 +609,8 @@ function goTab(k, anim){
   if(k==="chats"){ renderChats(); show("s-chats", anim); }
   else if(k==="updates"){ renderUpdates(); show("s-updates", anim); }
   else if(k==="calls"){ renderCalls(); show("s-other"); }
-  else { renderCommunities(); show("s-other"); }
+  else if(k==="comm"){ renderCommunities(); show("s-other"); }
+  else { $("s-other").innerHTML=`<div class="scroll"><div class="big">Settings</div></div><div class="empty">Nothing here in this demo</div>`; show("s-other"); }
 }
 
 /* ================= Calls and Communities ================= */
