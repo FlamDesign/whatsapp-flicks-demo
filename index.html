@@ -370,7 +370,7 @@ const I = {
 };
 
 /* ================= Flick runtime (same bridge as the other platform demos) ================= */
-function tagDoc(slotId, b){
+function tagDoc(slotId, b, noCta){
   const bridge = `/* Phones with hardware AV1 fail to play some Flicks: hide AV1 so the player uses VP9, HEVC or H.264. */(function(){var av=function(s){return /av01|av1/i.test(String(s||''))};try{if(window.VideoDecoder&&VideoDecoder.isConfigSupported){var o=VideoDecoder.isConfigSupported.bind(VideoDecoder);VideoDecoder.isConfigSupported=function(q){return q&&av(q.codec)?Promise.resolve({supported:false,config:q}):o(q)}}}catch(e){}try{var mc=navigator.mediaCapabilities;if(mc&&mc.decodingInfo){var od=mc.decodingInfo.bind(mc);mc.decodingInfo=function(q){return q&&q.video&&av(q.video.contentType)?Promise.resolve({supported:false,smooth:false,powerEfficient:false}):od(q)}}}catch(e){}try{for(var i=sessionStorage.length-1;i>=0;i--){var k=sessionStorage.key(i);if(k&&k.indexOf('vrtx_cap_')===0)sessionStorage.removeItem(k)}}catch(e){}})();(function(){var S=${JSON.stringify(slotId)};function t(m){m.flam=1;m.slot=S;try{parent.postMessage(m,"*")}catch(e){}}
 window.__vxOpen=function(u){t({type:"cta",url:u||""});return true};
 window.ExitApi={exit:function(n,u){t({type:"cta",url:u||""})}};
@@ -385,6 +385,8 @@ new MutationObserver(function(){var v=document.querySelector("vertex-player");if
 window.addEventListener("error",function(e){var s=e.target;if(s&&s.tagName==="SCRIPT")t({type:"error",msg:"Could not load "+s.src})},true);})();`;
   const cfg = b.adConfig ? `<script>window.AD_CONFIG=window.AD_CONFIG||{};window.AD_CONFIG.dsp="dv360_studio";window.AD_CONFIG.publisherInfo={"publisher_id":"\${PUBLISHER_ID}","adsxt_publisher_id":"\${ADSXT_PUBLISHER_ID}","universal_site_id":"\${UNIVERSAL_SITE_ID}","source_url":"\${SOURCE_URL}","source_url_enc":"\${SOURCE_URL_ENC}","adsxt_ad_system_domain":"\${ADSXT_AD_SYSTEM_DOMAIN}"};window.AD_CONFIG.clickTracker={"mode":"exit","template":""};<\/script>` : "";
   const fonts = b.fontScan ? `<script>(function(){var seen={},head=document.head||document.documentElement,until=Date.now()+3e4;function add(css){if(seen[css])return;seen[css]=1;var s=document.createElement("style");s.textContent=css;head.appendChild(s)}function scan(){try{var ps=document.getElementsByTagName("vertex-player");for(var i=0;i<ps.length;i++){var r=ps[i].shadowRoot;if(!r)continue;var n=r.querySelectorAll("style,link[rel=stylesheet]");for(var j=0;j<n.length;j++){var el=n[j];if(el.tagName==="LINK"){if(/fonts\\.googleapis\\.com/.test(el.href)&&!seen[el.href]){seen[el.href]=1;var l=document.createElement("link");l.rel="stylesheet";l.href=el.href;head.appendChild(l)}continue}var m=(el.textContent||"").match(/@font-face\\s*\\{[^}]*\\}/g);if(m)add(m.join(""))}}}catch(e){}if(Date.now()<until)setTimeout(scan,250)}scan()})();<\/script>` : "";
+  /* Promotional messages and catalogs have their own buttons, so the Flick's built-in CTA is hidden there. */
+  const hide = noCta ? `<script>(function(){var css="[data-vertex-trigger]{display:none!important}",until=Date.now()+6e4;function scan(){try{var ps=document.getElementsByTagName("vertex-player");for(var i=0;i<ps.length;i++){var r=ps[i].shadowRoot;if(r&&!r.querySelector("style[data-nocta]")){var st=document.createElement("style");st.setAttribute("data-nocta","");st.textContent=css;r.appendChild(st)}}}catch(e){}if(Date.now()<until)setTimeout(scan,150)}scan()})();<\/script>` : "";
   const bg = b.bg || (b.dark ? "#151515" : "#efefef");
   return `<!doctype html>
 <meta charset=utf-8>
@@ -394,6 +396,7 @@ window.addEventListener("error",function(e){var s=e.target;if(s&&s.tagName==="SC
 <script>var ExitApi=window.ExitApi||{exit:function(){}},clickTag="\${CLICK_URL_UNESC}";<\/script>
 ${cfg}
 ${fonts}
+${hide}
 <script src=${b.src}><\/script>`;
 }
 
@@ -402,8 +405,8 @@ const $ = id => document.getElementById(id);
 let toastT; function toast(t){ const el=$("toast"); el.textContent=t; el.classList.add("on"); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove("on"),2200); }
 
 let SLOTS = {}, seq = 0;
-function flick(id, brand){
-  SLOTS[id] = { brand, ready:false, error:false, lastCta:0, variant:0, timer:null, mounted:false };
+function flick(id, brand, noCta){
+  SLOTS[id] = { brand, noCta:!!noCta, ready:false, error:false, lastCta:0, variant:0, timer:null, mounted:false };
   const b=BRANDS[brand];
   return `<div class="flick ${b.dark?"dark":""} ${b.ar||""}" data-slot="${id}"><div class="fstate"></div></div>`;
 }
@@ -429,7 +432,7 @@ function mount(host){
   /* Each Flick runs at its design size and is scaled to its slot, as in the AppLovin demo. */
   const [bw,bh]=baseOf(BRANDS[s.brand]);
   f.width=bw; f.height=bh; f.style.width=bw+"px"; f.style.height=bh+"px";
-  f.srcdoc=tagDoc(id, BRANDS[s.brand]);
+  f.srcdoc=tagDoc(id, BRANDS[s.brand], s.noCta);
   const fit=()=>{ const w=host.clientWidth,h=host.clientHeight; if(!w||!h) return; const sc=Math.min(w/bw,h/bh); f.style.transform=`translate(${(w-bw*sc)/2}px,${(h-bh*sc)/2}px) scale(${sc})`; };
   fit(); s.ro=new ResizeObserver(fit); s.ro.observe(host);
   host.prepend(f);
@@ -528,7 +531,7 @@ function chatBody(c){
     <div class="b first">Welcome to Nike. You'll get member drops and offers here. Reply STOP at any time to opt out.${meta("6:02 PM")}</div>
     <div class="sys day">Today</div>
     <div class="b tpl first" id="fmt-promo">
-      ${flick(id,"nike")}
+      ${flick(id,"nike",true)}
       <div class="tx"><b>Black Friday is on.</b><br>The Universa training sets are part of the sale. Tap a look in the video to switch the outfit, then shop the one you like.${meta("9:12 AM")}</div>
       <div class="btns"><button onclick="shop('${id}')">${I.link}Shop the sale</button><button onclick="toast('You will no longer get offers from Nike')">${I.reply}Stop promotions</button></div>
     </div>`;
@@ -578,7 +581,7 @@ function openCatalog(anim="push"){
     <div class="biz">${avatar("macys","s52")}<span><b>Macy's${I.vf}</b><span>Department store</span></span></div>
     <div class="coll">Holiday apparel</div><div class="collsub">${CATALOG.length} items</div>
     ${CATALOG.map((it,i)=>{ const b=BRANDS[it.b], id="cat"+(++seq); return `
-    <div class="item">${flick(id,it.b)}
+    <div class="item">${flick(id,it.b,true)}
       <div class="inf"><div class="br">${esc(b.name)}</div>
       <div class="pn" ${it.title?"":`data-vname="${id}"`}>${esc(it.title||b.variants[0].n)}</div>
       <div class="ds">${esc(it.ds)}</div>
@@ -619,14 +622,14 @@ function openStatus(i, first=true){
   const el=$("viewer"); el.querySelectorAll(".flick[data-slot]").forEach(unmount); dropSlots(el);
   const id="st"+(++seq);
   el.innerHTML = `
-  <div class="prog">${STATUS.map((_,k)=>`<i class="${k<i?"done":k===i?"cur":""}"></i>`).join("")}</div>
+  <div class="prog"><i class="cur"></i></div>
   <div class="vhdr"><button class="back" onclick="closeStatus()" aria-label="Back">${I.back}</button>${avatar(b,"s36")}<span class="t"><b>${esc(b.name)}${I.vf}</b><span>${s.ago}</span></span>${I.dots}</div>
   <div class="vmedia">${flick(id,s.b)}
     <button class="vnav l" ${i===0?"disabled":""} onclick="openStatus(${i-1},false)" aria-label="Previous status">${I.chev("l")}</button>
     <button class="vnav r" onclick="${i===STATUS.length-1?"closeStatus()":`openStatus(${i+1},false)`}" aria-label="Next status">${I.chev("r")}</button>
   </div>
   <div class="vcap">${esc(s.cap)}<br><b data-vname="${id}">${esc(b.variants[0].n)}</b></div>
-  <div class="vbot"><span class="rp">Reply</span><button class="go" onclick="shop('${id}')">${esc(s.cta)}</button></div>`;
+  <div class="vbot"><span class="rp">Reply</span></div>`;
   if(first || cur!=="viewer"){ tab="updates"; show("viewer"); } else requestAnimationFrame(observeFlicks);
 }
 function closeStatus(){ goTab("updates"); }
