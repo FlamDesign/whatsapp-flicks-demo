@@ -412,7 +412,8 @@ function variantOf(id){ const s=SLOTS[id], b=BRANDS[s.brand]; return b.variants[
 function shop(id){ const s=SLOTS[id]; if(!s) return; openLink(s.brand, variantOf(id).url || BRANDS[s.brand].url); }
 function syncVariant(id){
   const s=SLOTS[id]; if(!s) return;
-  document.querySelectorAll(`[data-vname="${id}"]`).forEach(el=>{ el.style.opacity=0; setTimeout(()=>{ el.textContent = variantOf(id).n; el.style.opacity=1; },150); });
+  const n=variantOf(id).n;
+  document.querySelectorAll(`[data-vname="${id}"]`).forEach(el=>{ if(el.textContent===n) return; el.style.opacity=0; setTimeout(()=>{ el.textContent=n; el.style.opacity=1; },150); });
 }
 let io=null;
 function observeFlicks(){
