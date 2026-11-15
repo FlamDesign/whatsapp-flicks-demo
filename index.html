@@ -90,6 +90,7 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
 .sc{flex:none;width:98px;height:158px;border-radius:14px;position:relative;overflow:hidden;text-align:left;color:#fff}
 .sc .bgc{position:absolute;inset:0;display:grid;place-items:center}
 .sc .bgc img{width:100%;height:100%;object-fit:cover}
+.sc .bgc img.lg{object-fit:contain}
 .sc .bgc b{font-size:19px;font-weight:800;letter-spacing:.02em;opacity:.96;padding:0 6px;text-align:center}
 .sc::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.18),transparent 35%,transparent 55%,rgba(0,0,0,.55))}
 .sc .ring{position:absolute;top:8px;left:8px;z-index:2;padding:2px;border-radius:50%;border:2.5px solid var(--green);background:transparent}
@@ -363,7 +364,7 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
 const IC = id => `https://www.instacart.com/image-server/394x394/filters:fill(FFFFFF,true):format(jpg)/d2lnr5mha7bycj.cloudfront.net/product-image/file/${id}`;
 const CAD = id => `https://storage.googleapis.com/bucket-fi-production-apps-0672ab2d/original/images/${id}.webp`;
 const BRANDS = {
-  nike:{ name:"Nike", av:"N", avc:"#111", domain:"nike.com", url:"https://www.nike.com/",
+  nike:{ name:"Nike", av:"N", avc:"#111", lbg:"#000", domain:"nike.com", url:"https://www.nike.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a97885c9e74536944d35d53_dsefds/ad.js",
     variants:[{n:"Look 1"},{n:"Look 2"},{n:"Look 3"}] },
   levis:{ name:"Levi's", av:"L", avc:"#c41230", domain:"levi.com", url:"https://www.levi.com/US/en_US/",
@@ -394,7 +395,7 @@ const BRANDS = {
   bose:{ name:"Bose", av:"BOSE", avc:"#000", domain:"bose.com", url:"https://www.bose.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a9733389e74536944cd96bd_baspn2/ad.js",
     variants:[{n:"Color 1"},{n:"Color 2"},{n:"Color 3"}] },
-  lego:{ name:"LEGO", av:"LEGO", avc:"#e3000b", domain:"lego.com", url:"https://www.lego.com/",
+  lego:{ name:"LEGO", av:"LEGO", avc:"#e3000b", lbg:"#e3000b", domain:"lego.com", url:"https://www.lego.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_u008vu/ad.js",
     variants:[{n:"Option 1"},{n:"Option 2"},{n:"Option 3"}] },
   macys:{ name:"Macy's", av:"M", avc:"#b3121d", domain:"macys.com", url:"https://www.macys.com/" }
@@ -580,7 +581,7 @@ function avatar(o, size){
   const b = o.av ? o : BRANDS[o.biz||o];
   /* To show a brand's own logo, set `logo` on that brand to an image file or URL you have the right to use. */
   /* Looks for logos/<brand key>.png (or the brand's `logo` URL); shows the initials until a file is there. */
-  return `<span class="av ${size} ${b.av.length>2?"sm":""}" style="background:${b.avc}">${esc(b.av)}<img src="${esc(b.logo||("logos/"+b.key+".png"))}" alt="" style="object-fit:contain;background:#fff" onerror="this.remove()"></span>`;
+  return `<span class="av ${size} ${b.av.length>2?"sm":""}" style="background:${b.avc}">${esc(b.av)}<img src="${esc(b.logo||("logos/"+b.key+".png"))}" alt="" style="object-fit:contain;background:${b.lbg||"#fff"}" onerror="this.remove()"></span>`;
 }
 const TABS = [["updates","Updates"],["calls","Calls"],["comm","Communities"],["chats","Chats"],["settings","Settings"]];
 let tab="chats", cur=null, cart=0;
@@ -877,7 +878,7 @@ function renderUpdates(){
       <div class="sc me"><span class="av s40" style="position:absolute;top:8px;left:8px;background:#c8ced3"><img src="${U("photo-1618244972963-dbee1a7edc95")}" alt="" onerror="this.remove()"></span><span class="plus"><svg width="10" height="10" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M9 3v12M3 9h12"/></svg></span><span class="n">Add status</span></div>
       ${STATUS.map((s,i)=>{ const b=BRANDS[s.b], img=b.variants.find(v=>v.img); return `
       <button class="sc ${seen.has(s.b)?"seen":""}" onclick="openStatus(${i})">
-        <span class="bgc" style="background:${img?"#f3f3f3":b.avc}">${img?`<img src="${img.img}" alt="" data-c="${b.avc}" data-n="${esc(b.name)}" onerror="scFail(this)">`:`<b>${esc(b.name)}</b>`}</span>
+        <span class="bgc" style="background:${img?"#f3f3f3":(b.lbg||"#fff")}">${img?`<img src="${img.img}" alt="" data-c="${b.avc}" data-n="${esc(b.name)}" onerror="scFail(this)">`:`<img class="lg" src="${esc(b.logo||("logos/"+b.key+".png"))}" alt="" data-c="${b.avc}" data-n="${esc(b.name)}" onerror="scFail(this)">`}</span>
         <span class="ring">${avatar(b,"s36")}</span><span class="n">${esc(b.name)}</span>
       </button>`; }).join("")}
     </div>
