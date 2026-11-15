@@ -1080,6 +1080,13 @@ function jump(k){
   else openStatus(0);
 }
 
+/* ================= freshness =================
+   Phones and in-app browsers hold on to an old copy of this page. On load, ask the server which build is current
+   and reload once onto it if this copy is older. */
+const BUILD="1794785844";
+fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ t=t.trim();
+  if(t && t!==BUILD && !new URLSearchParams(location.search).get("v")?.includes(t)) location.replace(location.pathname+"?v="+t); }).catch(()=>{});
+
 /* ================= boot ================= */
 $("side-formats").innerHTML = FORMATS.map(([k,l])=>`<button class="fbtn" data-k="${k}" onclick="jump('${k}')">${l}</button>`).join("");
 goTab("chats");
