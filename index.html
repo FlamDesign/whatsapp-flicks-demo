@@ -715,7 +715,8 @@ const CART_SM = I.cart.replace('width="23" height="23"','width="17" height="17"'
 function msgBtns(chat, slot, extra){
   const n=cartCount(chat);
   return `<div class="btns"><button onclick="addToCart('${chat}','${slot}',this)">${CART_SM}<span>Add to cart</span></button>
-    <button data-viewcart="${chat}" onclick="openCart('${chat}')" style="${n?"":"display:none"}">View cart (<span data-cartn="${chat}">${n}</span>)</button>${extra||""}</div>`;
+    <button data-viewcart="${chat}" onclick="openCart('${chat}')" style="${n?"":"display:none"}">View cart (<span data-cartn="${chat}">${n}</span>)</button>
+    <button onclick="shop('${slot}')">${I.link}View product</button>${extra||""}</div>`;
 }
 function chatBody(c){
   let h="";
@@ -747,7 +748,7 @@ function chatBody(c){
     <div class="b tpl first">
       ${flick(id,"cad",true)}
       <div class="tx"><b>One drive, three Cadillacs.</b><br>Tap a model in the video to switch between Optiq, Celestiq and Escalade-V, then book time with the one you want to drive.${meta("8:30 AM")}</div>
-      <div class="btns"><button onclick="testDrive('${id}')">${I.reply}Book a test drive</button><button onclick="shop('${id}')">${I.link}Visit website</button></div>
+      <div class="btns"><button onclick="testDrive('${id}')">${I.reply}Book a test drive</button><button onclick="shop('${id}')">${I.link}Explore this model</button></div>
     </div>`;
   } else if(c.id==="bose" || c.id==="lego"){
     const id=c.id+"m"+(++seq), sony=c.id==="bose";
