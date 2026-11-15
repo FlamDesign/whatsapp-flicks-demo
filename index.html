@@ -416,12 +416,12 @@ const BRANDS = {
 /* ================= content ================= */
 const U = (id,w=160) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&h=${w}&q=70`;
 const CHATS = [
-  { id:"nike", biz:"nike", time:"9:12 AM", unread:1, pv:"Black Friday is on. Tap a look in the video to switch the outfit, then add the one you like to your cart." },
-  { id:"macys", biz:"macys", time:"8:47 AM", unread:2, pv:"Levi's Baggy Overalls. Tap a look in the video to switch the wash, then add it to your cart." },
-  { id:"cad", biz:"cad", time:"8:30 AM", unread:1, pv:"One drive, three Cadillacs. Tap a model in the video to switch." },
+  { id:"nike", biz:"nike", time:"9:12 AM", unread:1, pv:"Black Friday is on. The Universa training set, in three colors made to move with you." },
+  { id:"macys", biz:"macys", time:"8:47 AM", unread:2, pv:"Levi's Baggy Overalls. An easy fit that goes with everything, in three washes." },
+  { id:"cad", biz:"cad", time:"8:30 AM", unread:1, pv:"One drive, three Cadillacs. Optiq, Celestiq or Escalade-V." },
   { id:"hike", name:"Weekend hikers", photo:"photo-1602333158618-dd71de539d3b", time:"8:15 AM", pv:"Jordan: Trailhead at 7, I'll bring coffee", snd:"Jordan", last:"Trailhead at 7, I'll bring coffee" },
-  { id:"lego", biz:"lego", time:"Yesterday", pv:"Small brick, big possibilities. Tap a car in the video to switch." },
-  { id:"bose", biz:"bose", time:"Yesterday", unread:1, pv:"QuietComfort Ultra Earbuds. Tap a color in the video to switch." },
+  { id:"lego", biz:"lego", time:"Yesterday", pv:"Small brick, big possibilities. Three race cars, ready for the starting grid." },
+  { id:"bose", biz:"bose", time:"Yesterday", unread:1, pv:"QuietComfort Ultra Earbuds. Quiet when you want it, in a color that suits you." },
   { id:"fam", name:"Family", photo:"photo-1642335911245-238e13dcabf2", time:"Yesterday", pv:"Mom: Tree is up early this year", snd:"Mom", last:"Tree is up early this year" }
 ];
 /* Prices are illustrative. */
@@ -434,22 +434,22 @@ const PRODUCTS = {
 };
 const SHOPS = {
   nike:{ title:"Black Friday", kind:"Sportswear", items:[
-    { b:"nike", ds:"Switch the set in the video and see it move." }] },
+    { b:"nike", ds:"A matching set made to move with you, in three colors." }] },
   bose:{ title:"Earbuds", kind:"Audio", items:[
-    { b:"bose", ds:"Noise canceling earbuds. Tap a color in the video to switch." }] },
+    { b:"bose", ds:"Noise canceling earbuds, in three colors." }] },
   lego:{ title:"Race cars", kind:"Toys", items:[
-    { b:"lego", ds:"Tap a car in the video to switch." }] },
+    { b:"lego", ds:"Three race cars, ready to build." }] },
   macys:{ title:"Holiday apparel", kind:"Department store", items:[
-    { b:"levis", ds:"Three washes of the same overall. Tap a look in the video to switch." },
-    { b:"coach", ds:"Three bags, one outfit. Tap a bag in the video to switch." },
-    { b:"nike", ds:"Switch the set in the video and see it move." }] }
+    { b:"levis", ds:"One easy overall, three washes." },
+    { b:"coach", ds:"Three bags that finish the outfit." },
+    { b:"nike", ds:"A matching set made to move with you, in three colors." }] }
 };
 const STATUS = [
-  { b:"zara", ago:"12m ago", cap:"Bomber season. Tap a jacket in the video to switch.", cta:"Shop now" },
-  { b:"cad", ago:"38m ago", cap:"One drive, three Cadillacs. Tap a model to switch.", cta:"Explore" },
-  { b:"bj", ago:"1h ago", cap:"Which pint tonight? Tap one to switch.", cta:"Order now" },
-  { b:"acer", ago:"2h ago", cap:"A laptop for every kind of gamer. Tap to switch.", cta:"Shop now" },
-  { b:"airbnb", ago:"3h ago", cap:"Pick the stay that fits the trip. Tap to switch.", cta:"Explore stays" }
+  { b:"zara", ago:"12m ago", cap:"Bomber season.", cta:"Shop now" },
+  { b:"cad", ago:"38m ago", cap:"One drive, three Cadillacs.", cta:"Explore" },
+  { b:"bj", ago:"1h ago", cap:"Which pint tonight?", cta:"Order now" },
+  { b:"acer", ago:"2h ago", cap:"A laptop for every kind of gamer.", cta:"Shop now" },
+  { b:"airbnb", ago:"3h ago", cap:"Find the stay that fits the trip.", cta:"Explore stays" }
 ];
 const FORMATS = [["promo","Promotional message"],["catalog","Brand catalog"],["status","Status"]];
 
@@ -754,7 +754,7 @@ function chatBody(c){
     <div class="sys day">Today</div>
     <div class="b tpl first" id="fmt-promo">
       ${flick(id,"nike",true)}
-      <div class="tx"><b>Black Friday is on.</b><br>The Universa training sets are part of the sale. Tap a look in the video to switch the outfit, then add the one you like to your cart.<div class="pr">${usd(PRODUCTS.nike.price)}</div>${meta("9:12 AM")}</div>
+      <div class="tx"><b>Black Friday is on.</b><br>The Universa training set is in the sale, in three colors made to move with you.<div class="pr">${usd(PRODUCTS.nike.price)}</div>${meta("9:12 AM")}</div>
       ${msgBtns("nike",id)}
     </div>`;
   } else if(c.id==="macys"){
@@ -764,7 +764,7 @@ function chatBody(c){
     <div class="b first">Hi! The holiday apparel edit is live. Here is one we think you'll like.${meta("8:46 AM")}</div>
     <div class="b tpl">
       ${flick(id,"levis",true)}
-      <div class="tx"><b>Levi's <span data-vname="${id}">${esc(BRANDS.levis.variants[0].n)}</span></b><br>Tap a look in the video to switch the wash, then add it to your cart.<div class="pr">${usd(PRODUCTS.levis.price)}</div>${meta("8:47 AM")}</div>
+      <div class="tx"><b>Levi's <span data-vname="${id}">${esc(BRANDS.levis.variants[0].n)}</span></b><br>An easy fit that goes with everything, in three washes.<div class="pr">${usd(PRODUCTS.levis.price)}</div>${meta("8:47 AM")}</div>
       ${msgBtns("macys",id,`<button onclick="openCatalog('macys')">${SHOP_SM}View catalog</button>`)}
     </div>`;
   } else if(c.id==="cad"){
@@ -773,7 +773,7 @@ function chatBody(c){
     <div class="sys day">Today</div>
     <div class="b tpl first">
       ${flick(id,"cad",true)}
-      <div class="tx"><b>One drive, three Cadillacs.</b><br>Tap a model in the video to switch between Optiq, Celestiq and Escalade-V, then book time with the one you want to drive.${meta("8:30 AM")}</div>
+      <div class="tx"><b>One drive, three Cadillacs.</b><br>Optiq, Celestiq, Escalade-V. Find the one that feels like yours.${meta("8:30 AM")}</div>
       <div class="btns"><button onclick="testDrive('${id}')">${I.reply}Book a test drive</button><button onclick="shop('${id}')">${I.link}Explore this model</button></div>
     </div>`;
   } else if(c.id==="bose" || c.id==="lego"){
@@ -782,7 +782,7 @@ function chatBody(c){
     <div class="sys day">${c.time}</div>
     <div class="b tpl first">
       ${flick(id,c.id,true)}
-      <div class="tx"><b>${sony?"QuietComfort Ultra Earbuds":"Small brick, big possibilities."}</b><br>${sony?"Tap a color in the video to switch, then add yours to the cart.":"Tap a car in the video to switch, then add your pick to the cart."}<div class="pr">${usd(PRODUCTS[c.id].price)}</div>${meta(sony?"6:40 PM":"7:15 PM")}</div>
+      <div class="tx"><b>${sony?"QuietComfort Ultra Earbuds":"Small brick, big possibilities."}</b><br>${sony?"Quiet when you want it, in a color that suits you.":"Three race cars, ready for the starting grid. Which one are you building first?"}<div class="pr">${usd(PRODUCTS[c.id].price)}</div>${meta(sony?"6:40 PM":"7:15 PM")}</div>
       ${msgBtns(c.id,id,`<button onclick="openCatalog('${c.id}')">${SHOP_SM}View catalog</button>`)}
     </div>`;
   } else {
@@ -1083,7 +1083,7 @@ function jump(k){
 /* ================= freshness =================
    Phones and in-app browsers hold on to an old copy of this page. On load, ask the server which build is current
    and reload once onto it if this copy is older. */
-const BUILD="1794785844";
+const BUILD="1794786205";
 fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ t=t.trim();
   if(t && t!==BUILD && !new URLSearchParams(location.search).get("v")?.includes(t)) location.replace(location.pathname+"?v="+t); }).catch(()=>{});
 
