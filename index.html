@@ -6,6 +6,11 @@
 <title>Flicks on WhatsApp: concept demo</title>
 <meta name="description" content="Clickable concept by Flam: Flicks as the media in business promotional messages, brand catalogs and Status.">
 <meta name="robots" content="noindex">
+<link rel="preconnect" href="https://native-ads-dev.appless.workers.dev" crossorigin>
+<link rel="preconnect" href="https://native-ads.appless.workers.dev" crossorigin>
+<link rel="preconnect" href="https://flicks.flamapp.live" crossorigin>
+<link rel="preconnect" href="https://storage.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
 <style>
 :root{
   --green:#1daa61; --green-d:#008069; --out:#d9fdd3; --wall:#efeae2; --ink:#0a0a0a; --sub:#667781; --line:#e6e6e6;
@@ -566,6 +571,7 @@ function unmount(host){
 function dropSlots(root){ root.querySelectorAll(".flick[data-slot]").forEach(h=>{ const id=h.dataset.slot; if(SLOTS[id]){ clearTimeout(SLOTS[id].timer); SLOTS[id].ro&&SLOTS[id].ro.disconnect(); delete SLOTS[id]; } }); }
 window.addEventListener("message", e=>{
   const m=e.data; if(!m || m.flam!==1) return;
+  if(WARMING[m.slot]){ if(m.type==="ready"||m.type==="error") WARMING[m.slot](m.type); return; }
   const s=SLOTS[m.slot]; if(!s) return;
   const host=document.querySelector(`.flick[data-slot="${m.slot}"]`);
   if(!host || e.source!==host.querySelector("iframe")?.contentWindow) return;
@@ -979,6 +985,33 @@ document.addEventListener("keydown", e=>{
   if(e.key==="ArrowLeft") stepStatus(-1);
   if(e.key==="Escape") closeStatus();
 });
+
+/* ================= warm-up =================
+   After the first screen is up, each Flick is loaded once off screen, one at a time, so its player, skin and
+   video are already in the browser cache when the viewer opens it. It waits whenever a visible Flick is loading. */
+const WARMING = {}, WARM_ORDER = ["nike","levis","cad","zara","bj","coach","lego","bose","acer","airbnb"];
+window.__warm = [];
+function prewarm(){
+  const box=document.createElement("div"); box.setAttribute("aria-hidden","true");
+  box.style.cssText="position:fixed;left:-4000px;top:0;width:540px;height:640px;overflow:hidden;opacity:0;pointer-events:none";
+  document.body.appendChild(box);
+  let i=0;
+  const busy=()=>Object.values(SLOTS).some(s=>s.mounted && !s.ready && !s.error);
+  const next=()=>{
+    if(i>=WARM_ORDER.length){ box.remove(); return; }
+    if(busy() || document.hidden){ setTimeout(next,500); return; }
+    const k=WARM_ORDER[i++], b=BRANDS[k], id="warm-"+k, [bw,bh]=baseOf(b), t0=performance.now();
+    const f=document.createElement("iframe"); f.width=bw; f.height=bh; f.style.cssText=`width:${bw}px;height:${bh}px;border:0`;
+    f.setAttribute("allow","autoplay"); f.srcdoc=tagDoc(id,b,false,false,false);
+    let over=false;
+    const done=why=>{ if(over) return; over=true; clearTimeout(tm); delete WARMING[id]; window.__warm.push(k+":"+why+":"+Math.round(performance.now()-t0));
+      setTimeout(()=>{ f.remove(); next(); }, why==="ready"?1200:0); };
+    const tm=setTimeout(()=>done("timeout"),15000);
+    WARMING[id]=done; box.appendChild(f);
+  };
+  next();
+}
+addEventListener("load", ()=>setTimeout(prewarm, 700));
 
 /* ================= sheets ================= */
 function openLink(brand, url){
