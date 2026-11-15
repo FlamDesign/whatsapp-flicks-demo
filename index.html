@@ -183,12 +183,16 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
 .hub{display:flex;justify-content:space-between;padding:4px 22px 6px}
 .hub button{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12.500px;color:#111;width:68px}
 .hub button span{width:54px;height:54px;border-radius:50%;background:#f0f2f5;display:grid;place-items:center;color:#111}
-.row.call{padding-right:14px}
-.row.call .bd{min-height:60px;padding:9px 8px 9px 0;border-bottom:.5px solid #dcdcdc}
-.row.call .pv{display:flex;align-items:center;gap:5px;-webkit-line-clamp:1}
-.row.call.miss .nm,.row.call.miss .pv{color:#e53935}
-.row.call .cw{font-size:14px;color:var(--sub);align-self:center}
-.row.call .ci{color:#111;align-self:center;margin-left:10px}
+.crw{display:flex;align-items:stretch;gap:12px;padding-left:16px}
+.crw>.av{align-self:center}
+.av.s44{width:44px;height:44px;font-size:15px!important}
+.crw .cb{flex:1;min-width:0;display:flex;align-items:center;gap:12px;min-height:62px;padding:8px 16px 8px 0;border-bottom:.5px solid #d9d9d9}
+.crw .ct{flex:1;min-width:0}
+.crw .ct b{display:block;font-size:17px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crw .ct span{display:flex;align-items:center;gap:5px;font-size:15px;color:var(--sub);margin-top:1px}
+.crw.miss .ct b{color:#e53935}
+.crw .cw{font-size:15px;color:var(--sub);flex:none}
+.crw .ci{color:#111;flex:none;display:grid}
 .e2e{display:flex;gap:5px;align-items:center;justify-content:center;font-size:12px;color:var(--sub);padding:18px 16px}
 .cempty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:26px 30px 0}
 .cart2{position:relative;width:150px;height:120px;margin-bottom:18px}
@@ -620,7 +624,7 @@ const CALLS = [
   { name:"Mom", photo:"photo-1512909006721-3d6018887383", dir:"miss", kind:"voice", when:"Yesterday" },
   { name:"Jordan", photo:"photo-1621531518034-94ecf4778186", dir:"out", kind:"voice", when:"Friday" },
   { name:"Weekend hikers", photo:"photo-1602333158618-dd71de539d3b", dir:"in", kind:"voice", when:"Thursday" },
-  { name:"Mom", photo:"photo-1512909006721-3d6018887383", dir:"out", kind:"video", when:"11/08/26" }
+  { name:"Mom", photo:"photo-1512909006721-3d6018887383", dir:"out", kind:"video", when:"11/8/26" }
 ];
 const CI = {
   phone:I.tabs.calls.replace('width="26" height="26"','width="22" height="22"'),
@@ -638,8 +642,7 @@ function renderCalls(){
     <div class="search">${I.search}<span>Search</span></div>
     <div class="hub">${[["phone","Call"],["sched","Schedule"],["pad","Keypad"],["fav","Favorites"]].map(([k,l])=>`<button><span>${CI[k]}</span>${l}</button>`).join("")}</div>
     <div class="sect" style="padding-top:8px">Recent</div>
-    ${CALLS.map(c=>`<div class="row call ${c.dir}">${avatar(c,"s40")}<span class="bd"><span class="l1"><span class="nm">${esc(c.name)}</span></span>
-      <span class="l2"><span class="pv">${c.kind==="video"?CI.vid:CI.arrow(c.dir==="out"?"out":"in")}${c.dir==="miss"?"Missed":c.dir==="out"?"Outgoing":"Incoming"}</span></span></span><span class="cw">${c.when}</span><span class="ci">${CI.info}</span></div>`).join("")}
+    ${CALLS.map(c=>`<div class="crw ${c.dir}">${avatar(c,"s44")}<div class="cb"><span class="ct"><b>${esc(c.name)}</b><span>${c.kind==="video"?CI.vid:CI.arrow(c.dir==="out"?"out":"in")}${c.dir==="miss"?"Missed":c.dir==="out"?"Outgoing":"Incoming"}</span></span><span class="cw">${c.when}</span><span class="ci">${CI.info}</span></div></div>`).join("")}
     <div class="e2e"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M17 9V7A5 5 0 0 0 7 7v2H5v12h14V9zm-8 0V7a3 3 0 0 1 6 0v2z"/></svg>Your personal calls are end-to-end encrypted</div>
     <div class="tabpad"></div>
   </div>`;
