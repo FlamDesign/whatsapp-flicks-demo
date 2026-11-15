@@ -391,9 +391,9 @@ const BRANDS = {
   bj:{ name:"Ben & Jerry's", av:"B&J", avc:"#2a6fb7", domain:"benjerry.com", url:"https://www.benjerry.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_z1fp1a/ad.js",
     variants:[{n:"Cherry Garcia",img:IC("large_c272f189-7d9c-4c5d-ab83-48e12b1874dd.png")},{n:"Razz Up!"},{n:"Chunky Monkey",img:IC("large_1fca5e9d-fd60-48c2-a733-71a021963dc9.png")}] },
-  sony:{ name:"Sony", av:"SONY", avc:"#000", domain:"electronics.sony.com", url:"https://electronics.sony.com/",
-    src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_dj5rq6/ad.js",
-    variants:[{n:"Black"},{n:"White"},{n:"Blue"}] },
+  bose:{ name:"Bose", av:"BOSE", avc:"#000", domain:"bose.com", url:"https://www.bose.com/",
+    src:"https://native-ads-dev.appless.workers.dev/6a9733389e74536944cd96bd_baspn2/ad.js",
+    variants:[{n:"Color 1"},{n:"Color 2"},{n:"Color 3"}] },
   lego:{ name:"LEGO", av:"LEGO", avc:"#e3000b", domain:"lego.com", url:"https://www.lego.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_u008vu/ad.js",
     variants:[{n:"Option 1"},{n:"Option 2"},{n:"Option 3"}] },
@@ -407,23 +407,23 @@ const CHATS = [
   { id:"macys", biz:"macys", time:"8:47 AM", unread:2, pv:"Levi's Baggy Overalls. Tap a look in the video to switch the wash, then add it to your cart." },
   { id:"cad", biz:"cad", time:"8:30 AM", unread:1, pv:"One drive, three Cadillacs. Tap a model in the video to switch." },
   { id:"hike", name:"Weekend hikers", photo:"photo-1602333158618-dd71de539d3b", time:"8:15 AM", pv:"Jordan: Trailhead at 7, I'll bring coffee", snd:"Jordan", last:"Trailhead at 7, I'll bring coffee" },
-  { id:"sony", biz:"sony", time:"Yesterday", unread:1, pv:"WH-CH720N noise canceling headphones. Tap a color in the video to switch." },
-  { id:"fam", name:"Family", photo:"photo-1642335911245-238e13dcabf2", time:"Yesterday", pv:"Mom: Tree is up early this year", snd:"Mom", last:"Tree is up early this year" },
-  { id:"lego", biz:"lego", time:"Friday", pv:"Small brick, big possibilities. Tap a car in the video to switch." }
+  { id:"lego", biz:"lego", time:"Yesterday", pv:"Small brick, big possibilities. Tap a car in the video to switch." },
+  { id:"bose", biz:"bose", time:"Yesterday", unread:1, pv:"QuietComfort Ultra Earbuds. Tap a color in the video to switch." },
+  { id:"fam", name:"Family", photo:"photo-1642335911245-238e13dcabf2", time:"Yesterday", pv:"Mom: Tree is up early this year", snd:"Mom", last:"Tree is up early this year" }
 ];
 /* Prices are illustrative. */
 const PRODUCTS = {
   nike:{ title:"Nike Universa training set", price:120 },
   levis:{ price:108 },
   coach:{ price:450 },
-  sony:{ title:"WH-CH720N headphones", price:149.99 },
+  bose:{ title:"QuietComfort Ultra Earbuds", price:299 },
   lego:{ title:"LEGO race car set", price:59.99 }
 };
 const SHOPS = {
   nike:{ title:"Black Friday", kind:"Sportswear", items:[
     { b:"nike", ds:"Switch the set in the video and see it move." }] },
-  sony:{ title:"Headphones", kind:"Electronics", items:[
-    { b:"sony", ds:"Light, all-day noise canceling. Tap a color in the video to switch." }] },
+  bose:{ title:"Earbuds", kind:"Audio", items:[
+    { b:"bose", ds:"Noise canceling earbuds. Tap a color in the video to switch." }] },
   lego:{ title:"Race cars", kind:"Toys", items:[
     { b:"lego", ds:"Tap a car in the video to switch." }] },
   macys:{ title:"Holiday apparel", kind:"Department store", items:[
@@ -680,7 +680,7 @@ let openChatId=null;
 const meta = (t,mine) => `<span class="meta">${t}${mine?I.ticks:""}</span>`;
 const now = () => new Date().toLocaleTimeString("en-US", {hour:"numeric",minute:"2-digit"});
 const usd = n => "$"+n.toFixed(2);
-const CARTS = { nike:[], macys:[], sony:[], lego:[] }, EXTRA = { }, ORDERS = { };
+const CARTS = { nike:[], macys:[], bose:[], lego:[] }, EXTRA = { }, ORDERS = { };
 const cartCount = c => (CARTS[c]||[]).reduce((a,i)=>a+i.qty,0);
 const cartTotal = c => (CARTS[c]||[]).reduce((a,i)=>a+i.qty*i.price,0);
 const SHOP_SM = I.shop.replace('width="22" height="22"','width="17" height="17"');
@@ -723,13 +723,13 @@ function chatBody(c){
       <div class="tx"><b>One drive, three Cadillacs.</b><br>Tap a model in the video to switch between Optiq, Celestiq and Escalade-V, then book time with the one you want to drive.${meta("8:30 AM")}</div>
       <div class="btns"><button onclick="testDrive('${id}')">${I.reply}Book a test drive</button><button onclick="shop('${id}')">${I.link}Visit website</button></div>
     </div>`;
-  } else if(c.id==="sony" || c.id==="lego"){
-    const id=c.id+"m"+(++seq), sony=c.id==="sony";
+  } else if(c.id==="bose" || c.id==="lego"){
+    const id=c.id+"m"+(++seq), sony=c.id==="bose";
     h=`<div class="sys info">This business uses a secure service from Meta to manage this chat.</div>
     <div class="sys day">${c.time}</div>
     <div class="b tpl first">
       ${flick(id,c.id,true)}
-      <div class="tx"><b>${sony?"WH-CH720N noise canceling headphones":"Small brick, big possibilities."}</b><br>${sony?"Tap a color in the video to switch, then add yours to the cart.":"Tap a car in the video to switch, then add your pick to the cart."}<div class="pr">${usd(PRODUCTS[c.id].price)}</div>${meta(sony?"6:40 PM":"10:05 AM")}</div>
+      <div class="tx"><b>${sony?"QuietComfort Ultra Earbuds":"Small brick, big possibilities."}</b><br>${sony?"Tap a color in the video to switch, then add yours to the cart.":"Tap a car in the video to switch, then add your pick to the cart."}<div class="pr">${usd(PRODUCTS[c.id].price)}</div>${meta(sony?"6:40 PM":"7:15 PM")}</div>
       ${msgBtns(c.id,id,`<button onclick="openCatalog('${c.id}')">${SHOP_SM}View catalog</button>`)}
     </div>`;
   } else {
