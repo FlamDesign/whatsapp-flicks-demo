@@ -175,6 +175,49 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
 .item .cta button.p{background:var(--green);color:#fff}
 .item .cta button.done{background:#d9fdd3;color:#15603e}
 
+/* ---------- cart, order, payment ---------- */
+.b .pr{font-weight:600;margin-top:3px}
+.b .btns button.ok{color:#15603e;background:#eef8f1}
+.b.sentcart{width:min(280px,78%);max-width:none;padding:3px 3px 0}
+.b .oc{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:rgba(0,0,0,.05);border-radius:7px;padding:9px 10px}
+.b .oc .oi{width:40px;height:40px;border-radius:8px;background:#fff;display:grid;place-items:center;color:var(--green-d);flex:none}
+.b .oc b,.b .oh b{display:block;font-size:15.500px}.b .oc span span,.b .oh span span{display:block;font-size:13px;color:var(--sub)}
+.b .tx2{height:18px;padding:0 6px}
+.b.sentcart .btns{border-top-color:rgba(0,0,0,.08)}
+.b.order{width:min(300px,82%)}
+.b .oh{display:flex;gap:10px;align-items:center;background:#f5f6f6;border-radius:7px;padding:9px 10px}
+.b .oh>span:nth-child(2){flex:1;min-width:0}
+.b .oh i{font-style:normal;font-size:12px;font-weight:600;padding:3px 8px;border-radius:10px;background:#fff3cd;color:#8a6100}
+.b .oh i.paid{background:#d9fdd3;color:#15603e}
+.sheet{max-height:86%;overflow-y:auto}
+.sheet .csub{font-size:13.500px;color:var(--sub);margin:-6px 0 10px}
+.crow{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:.5px solid #e6e6e6}
+.crow .cn{flex:1;min-width:0}.crow .cn b{display:block;font-size:15.500px;font-weight:600}.crow .cn span{font-size:13.500px;color:var(--sub)}
+.crow .lq{font-size:15px;color:var(--sub)}
+.qty{display:flex;align-items:center;gap:2px;border:1px solid #d5d9dc;border-radius:18px;height:34px;padding:0 3px;flex:none}
+.qty button{width:28px;height:28px;font-size:19px;line-height:1;color:var(--green-d)}
+.qty b{min-width:18px;text-align:center;font-size:15px}
+.tot{display:flex;justify-content:space-between;padding:12px 0 4px;font-size:16.500px}
+.tot.sm{font-size:14.500px;color:#54656f;padding:8px 0 0}
+.sheet .go{display:grid;place-items:center;height:48px;border-radius:24px;font-size:16.500px;font-weight:600;width:100%;background:var(--green);color:#fff;margin-top:12px}
+.sheet .go:disabled{opacity:.85}
+.pm{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid #e2e5e7;border-radius:12px;margin-top:12px}
+.pm>span:nth-child(2){flex:1}.pm b{display:block;font-size:15.500px}.pm span span{font-size:13px;color:var(--sub)}
+.pm em{font-style:normal;color:var(--green-d);font-weight:600;font-size:14.500px}
+.cardic{width:40px;height:28px;border-radius:5px;background:linear-gradient(135deg,#2b3a55,#51648a);position:relative;flex:none}
+.cardic::after{content:"";position:absolute;left:5px;top:8px;width:9px;height:7px;border-radius:2px;background:#e7c66b}
+.spin{width:22px;height:22px;border-radius:50%;border:2.500px solid rgba(255,255,255,.4);border-top-color:#fff;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.paydone{display:flex;flex-direction:column;align-items:center;gap:6px;padding:22px 0 14px;text-align:center}
+.paydone b{font-size:19px}.paydone>span:last-child{font-size:14.500px;color:var(--sub)}
+.bigok{width:64px;height:64px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;margin-bottom:8px;animation:pop2 .4s var(--ease)}
+@keyframes pop2{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+.paidline{display:flex;gap:8px;align-items:center;color:#15603e;font-weight:600;font-size:15px;padding:12px 0}
+.item .price{font-size:16px;font-weight:600;margin-top:3px}
+.cartbar{position:absolute;left:12px;right:12px;bottom:30px;height:50px;border-radius:25px;background:var(--green);color:#fff;display:none;align-items:center;justify-content:space-between;padding:0 20px;font-size:16px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.2);z-index:5}
+.cartbar.on{display:flex}
+.cartbar em{font-style:normal;font-weight:500;font-size:14.500px;opacity:.95}
+
 /* ---------- status viewer ---------- */
 #viewer{background:#000;color:#fff;z-index:40;padding-top:0;perspective:1100px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
 #viewer.on{animation:vin .26s var(--ease)}
@@ -240,6 +283,7 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
   .inbar{padding-bottom:calc(7px + var(--sab))}
   .vbot{padding-bottom:calc(10px + var(--sab))}
   .sheet{padding-bottom:calc(20px + var(--sab))}
+  .cartbar{bottom:calc(14px + var(--sab))}
   .fab{display:flex;position:absolute;right:12px;bottom:calc(70px + var(--sab));z-index:65;height:38px;padding:0 14px;border-radius:19px;background:#111;color:#fff;font-size:13.5px;font-weight:600;align-items:center;gap:6px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
   .fab.up{display:none}
   .b.tpl{width:86%}
@@ -326,8 +370,8 @@ const BRANDS = {
 /* ================= content ================= */
 const U = (id,w=160) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&h=${w}&q=70`;
 const CHATS = [
-  { id:"nike", biz:"nike", time:"9:12 AM", unread:1, pv:"Black Friday is on. Tap a look in the video to switch the outfit, then shop the one you like." },
-  { id:"macys", biz:"macys", time:"8:47 AM", unread:2, pv:"Catalog: Holiday apparel" },
+  { id:"nike", biz:"nike", time:"9:12 AM", unread:1, pv:"Black Friday is on. Tap a look in the video to switch the outfit, then add the one you like to your cart." },
+  { id:"macys", biz:"macys", time:"8:47 AM", unread:2, pv:"Levi's Baggy Overalls. Tap a look in the video to switch the wash, then add it to your cart." },
   { id:"hike", name:"Weekend hikers", photo:"photo-1602333158618-dd71de539d3b", time:"8:15 AM", pv:"Jordan: Trailhead at 7, I'll bring coffee", snd:"Jordan", last:"Trailhead at 7, I'll bring coffee" },
   { id:"priya", name:"Priya", photo:"photo-1578632292335-df3abbb0d586", time:"Yesterday", pv:"See you at 6", mine:true, last:"See you at 6" },
   { id:"fam", name:"Family", photo:"photo-1642335911245-238e13dcabf2", time:"Yesterday", pv:"Mom: Tree is up early this year", snd:"Mom", last:"Tree is up early this year" },
@@ -336,11 +380,20 @@ const CHATS = [
   { id:"dad", name:"Dad", photo:"photo-1559310589-2673bfe16970", time:"Thursday", pv:"Landed. Call you tonight", last:"Landed. Call you tonight" },
   { id:"mia", name:"Mia Torres", photo:"photo-1516762689617-e1cffcef479d", time:"Wednesday", pv:"Sending the address now", mine:true, last:"Sending the address now" }
 ];
-const CATALOG = [
-  { b:"levis", ds:"Three washes of the same overall. Tap a look in the video to switch." },
-  { b:"coach", ds:"Three bags, one outfit. Tap a bag in the video to switch." },
-  { b:"nike", title:"Nike Universa training set", ds:"Switch the set in the video and see it move." }
-];
+/* Prices are illustrative. */
+const PRODUCTS = {
+  nike:{ title:"Nike Universa training set", price:120 },
+  levis:{ price:108 },
+  coach:{ price:450 }
+};
+const SHOPS = {
+  nike:{ title:"Black Friday", kind:"Sportswear", items:[
+    { b:"nike", ds:"Switch the set in the video and see it move." }] },
+  macys:{ title:"Holiday apparel", kind:"Department store", items:[
+    { b:"levis", ds:"Three washes of the same overall. Tap a look in the video to switch." },
+    { b:"coach", ds:"Three bags, one outfit. Tap a bag in the video to switch." },
+    { b:"nike", ds:"Switch the set in the video and see it move." }] }
+};
 const STATUS = [
   { b:"zara", ago:"12m ago", cap:"Bomber season. Tap a jacket in the video to switch.", cta:"Shop now" },
   { b:"cad", ago:"38m ago", cap:"One drive, three Cadillacs. Tap a model to switch.", cta:"Explore" },
@@ -539,31 +592,51 @@ function renderChats(){
 /* ================= Chat ================= */
 let openChatId=null;
 const meta = (t,mine) => `<span class="meta">${t}${mine?I.ticks:""}</span>`;
+const now = () => new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+const usd = n => "$"+n.toFixed(2);
+const CARTS = { nike:[], macys:[] }, EXTRA = { }, ORDERS = { };
+const cartCount = c => (CARTS[c]||[]).reduce((a,i)=>a+i.qty,0);
+const cartTotal = c => (CARTS[c]||[]).reduce((a,i)=>a+i.qty*i.price,0);
+const SHOP_SM = I.shop.replace('width="22" height="22"','width="17" height="17"');
+const CART_SM = I.cart.replace('width="23" height="23"','width="17" height="17"');
+/* Buttons under a Flick message: the cart is filled from the message itself. */
+function msgBtns(chat, slot, extra){
+  const n=cartCount(chat);
+  return `<div class="btns"><button onclick="addToCart('${chat}','${slot}',this)">${CART_SM}<span>Add to cart</span></button>
+    <button data-viewcart="${chat}" onclick="openCart('${chat}')" style="${n?"":"display:none"}">View cart (<span data-cartn="${chat}">${n}</span>)</button>${extra||""}</div>`;
+}
 function chatBody(c){
+  let h="";
   if(c.id==="nike"){
     const id="promo"+(++seq);
-    return `<div class="sys info">This business uses a secure service from Meta to manage this chat.</div>
+    h=`<div class="sys info">This business uses a secure service from Meta to manage this chat.</div>
     <div class="sys day">Tuesday</div>
     <div class="b first">Welcome to Nike. You'll get member drops and offers here. Reply STOP at any time to opt out.${meta("6:02 PM")}</div>
     <div class="sys day">Today</div>
     <div class="b tpl first" id="fmt-promo">
       ${flick(id,"nike",true)}
-      <div class="tx"><b>Black Friday is on.</b><br>The Universa training sets are part of the sale. Tap a look in the video to switch the outfit, then shop the one you like.${meta("9:12 AM")}</div>
-      <div class="btns"><button onclick="shop('${id}')">${I.link}Shop the sale</button><button onclick="toast('You will no longer get offers from Nike')">${I.reply}Stop promotions</button></div>
+      <div class="tx"><b>Black Friday is on.</b><br>The Universa training sets are part of the sale. Tap a look in the video to switch the outfit, then add the one you like to your cart.<div class="pr">${usd(PRODUCTS.nike.price)}</div>${meta("9:12 AM")}</div>
+      ${msgBtns("nike",id,`<button onclick="toast('You will no longer get offers from Nike')">${I.reply}Stop promotions</button>`)}
     </div>`;
-  }
-  if(c.id==="macys"){
-    return `<div class="sys info">This business uses a secure service from Meta to manage this chat.</div>
+  } else if(c.id==="macys"){
+    const id="mprod"+(++seq);
+    h=`<div class="sys info">This business uses a secure service from Meta to manage this chat.</div>
     <div class="sys day">Today</div>
-    <div class="b first">Hi! The holiday apparel edit is live. Every piece in the catalog is a Flick, so you can switch styles in the video before you add to cart.${meta("8:46 AM")}</div>
-    <div class="b cat">
-      <button class="cc" onclick="openCatalog()"><span class="th">M</span><span><b>Holiday apparel</b><span>Macy's · ${CATALOG.length} items</span></span></button>
-      <div class="tx" style="padding:6px 6px 7px;overflow:hidden">Levi's, Coach and Nike, picked for the season.${meta("8:47 AM")}</div>
-      <div class="btns"><button onclick="openCatalog()">${I.shop.replace('width="22" height="22"','width="17" height="17"')}View catalog</button></div>
+    <div class="b first">Hi! The holiday apparel edit is live. Here is one we think you'll like.${meta("8:46 AM")}</div>
+    <div class="b tpl">
+      ${flick(id,"levis",true)}
+      <div class="tx"><b>Levi's <span data-vname="${id}">${esc(BRANDS.levis.variants[0].n)}</span></b><br>Tap a look in the video to switch the wash, then add it to your cart.<div class="pr">${usd(PRODUCTS.levis.price)}</div>${meta("8:47 AM")}</div>
+      ${msgBtns("macys",id,`<button onclick="openCatalog('macys')">${SHOP_SM}View catalog</button>`)}
     </div>`;
-  }
-  return `<div class="sys day">${c.time.includes(":")?"Today":c.time}</div>
+  } else {
+    h=`<div class="sys day">${c.time.includes(":")?"Today":c.time}</div>
     <div class="b ${c.mine?"o":""} first">${c.snd?`<span class="snd" style="color:#b4507a">${esc(c.snd)}</span>`:""}${esc(c.last)}${meta(c.time.includes(":")?c.time:"7:30 PM",c.mine)}</div>`;
+  }
+  return h + (EXTRA[c.id]||[]).map(e=>e.order?orderBubble(ORDERS[e.order]):e.html).join("");
+}
+function pushMsg(chat, entry){
+  (EXTRA[chat]=EXTRA[chat]||[]).push(entry);
+  if(cur==="s-chat" && openChatId===chat){ $("msgs").insertAdjacentHTML("beforeend", entry.order?orderBubble(ORDERS[entry.order]):entry.html); const sc=$("chat-scroll"); sc.scrollTo({top:sc.scrollHeight,behavior:"smooth"}); }
 }
 function openChat(id, anim="push"){
   const c=CHATS.find(x=>x.id===id), b=c.biz&&BRANDS[c.biz]; openChatId=id;
@@ -573,7 +646,7 @@ function openChat(id, anim="push"){
   <div class="chdr">
     <button class="back" onclick="goTab('chats','pop')" aria-label="Back">${I.back}</button>
     <span class="who">${avatar(c,"s36")}<span><b>${esc(b?b.name:c.name)}${b?I.vf:""}</b><span>${b?"Official business account":"tap here for contact info"}</span></span></span>
-    <span class="acts">${c.id==="macys"?`<button onclick="openCatalog()" aria-label="Catalog">${I.shop}</button>`:""}${I.tabs.calls.replace('width="26" height="26"','width="23" height="23"')}</span>
+    <span class="acts">${SHOPS[id]?`<button id="fmt-shopbtn" onclick="openCatalog('${id}')" aria-label="Catalog">${I.shop}</button>`:""}${I.tabs.calls.replace('width="26" height="26"','width="23" height="23"')}</span>
   </div>
   <div class="scroll wall" id="chat-scroll"><div class="msgs" id="msgs">${chatBody(c)}</div></div>
   <form class="inbar" id="inbar" onsubmit="return sendMsg(event)">${I.plus}<span class="f"><input id="msg" placeholder="" autocomplete="off" oninput="$('inbar').classList.toggle('typing',!!this.value.trim())"></span><span class="idle" style="display:flex;gap:14px">${I.cam}${I.mic}</span><button class="send" aria-label="Send">${I.send}</button></form>`;
@@ -582,33 +655,106 @@ function openChat(id, anim="push"){
 }
 function sendMsg(e){
   e.preventDefault(); const i=$("msg"), v=i.value.trim(); if(!v) return false;
-  const t=new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
-  $("msgs").insertAdjacentHTML("beforeend",`<div class="b o first">${esc(v)}${meta(t,true)}</div>`);
-  i.value=""; $("inbar").classList.remove("typing"); const sc=$("chat-scroll"); sc.scrollTop=sc.scrollHeight; return false;
+  pushMsg(openChatId, {html:`<div class="b o first">${esc(v)}${meta(now(),true)}</div>`});
+  i.value=""; $("inbar").classList.remove("typing"); return false;
+}
+
+/* ================= Cart, order and payment ================= */
+function itemName(slot){ const s=SLOTS[slot], p=PRODUCTS[s.brand], v=variantOf(slot).n; return p.title ? `${p.title}, ${v}` : v; }
+function addToCart(chat, slot, btn){
+  const s=SLOTS[slot]; if(!s) return;
+  const name=itemName(slot), key=s.brand+"|"+name, cart=CARTS[chat];
+  const hit=cart.find(i=>i.key===key);
+  if(hit) hit.qty++; else cart.push({ key, brand:s.brand, name, price:PRODUCTS[s.brand].price, qty:1 });
+  if(btn){ const l=btn.querySelector("span")||btn, t=l.textContent; l.textContent="Added"; btn.classList.add("ok"); setTimeout(()=>{ l.textContent=t; btn.classList.remove("ok"); },1200); }
+  toast(`${name} added to cart`); syncCart(chat);
+}
+function syncCart(chat){
+  const n=cartCount(chat);
+  document.querySelectorAll(`[data-cartn="${chat}"]`).forEach(e=>e.textContent=n);
+  document.querySelectorAll(`[data-viewcart="${chat}"]`).forEach(e=>e.style.display=n?"":"none");
+  document.querySelectorAll(`[data-cartbadge="${chat}"]`).forEach(e=>{ e.textContent=n||""; e.classList.toggle("on",!!n); });
+  document.querySelectorAll(`[data-cartbar="${chat}"]`).forEach(e=>{ e.classList.toggle("on",!!n); const t=e.querySelector("em"); if(t) t.textContent=`${n} item${n===1?"":"s"} · ${usd(cartTotal(chat))}`; });
+}
+const lineRow = (i,ctl) => `<div class="crow">${avatar(BRANDS[i.brand],"s40")}<span class="cn"><b>${esc(i.name)}</b><span>${esc(BRANDS[i.brand].name)} · ${usd(i.price)}</span></span>${ctl}</div>`;
+function openCart(chat){
+  const cart=CARTS[chat], b=BRANDS[CHATS.find(c=>c.id===chat).biz];
+  if(!cart.length){ closeSheet(); toast("Your cart is empty"); return; }
+  $("sheet").innerHTML = `<div class="grab"></div><h3>Your cart</h3><div class="csub">${esc(b.name)}</div>
+    ${cart.map((i,k)=>lineRow(i,`<span class="qty"><button onclick="qty('${chat}',${k},-1)" aria-label="Less">−</button><b>${i.qty}</b><button onclick="qty('${chat}',${k},1)" aria-label="More">+</button></span>`)).join("")}
+    <div class="tot"><span>Subtotal</span><b>${usd(cartTotal(chat))}</b></div>
+    <button class="go" onclick="placeOrder('${chat}')">Place order</button>
+    <small style="text-align:center">Your cart is sent to ${esc(b.name)} as a message.</small>`;
+  $("toast").classList.remove("on"); $("sheet").classList.add("on"); $("scrim").classList.add("on");
+}
+function qty(chat,k,d){ const c=CARTS[chat]; c[k].qty+=d; if(c[k].qty<=0) c.splice(k,1); syncCart(chat); openCart(chat); }
+function placeOrder(chat){
+  const items=CARTS[chat].map(i=>({...i})); if(!items.length) return;
+  const b=BRANDS[CHATS.find(c=>c.id===chat).biz], n=items.reduce((a,i)=>a+i.qty,0), total=items.reduce((a,i)=>a+i.qty*i.price,0);
+  const id=(chat==="nike"?"NK":"MC")+"-"+(20000+Math.floor(Math.random()*70000));
+  ORDERS[id]={ id, chat, items, n, total, paid:false };
+  CARTS[chat]=[]; closeSheet();
+  if(!(cur==="s-chat" && openChatId===chat)) openChat(chat,"pop");
+  syncCart(chat);
+  pushMsg(chat,{html:`<div class="b o first sentcart"><button class="oc" onclick="reviewPay('${id}')"><span class="oi">${I.cart}</span><span><b>${n} item${n===1?"":"s"}</b><span>${usd(total)} (estimated total)</span></span></button><div class="tx2">${meta(now(),true)}</div><div class="btns"><button onclick="reviewPay('${id}')">View sent cart</button></div></div>`});
+  setTimeout(()=>pushMsg(chat,{order:id}), 1500);
+}
+function orderBubble(o){
+  const b=BRANDS[CHATS.find(c=>c.id===o.chat).biz];
+  return `<div class="b tpl first order" id="ord-${o.id}">
+    <div class="oh">${avatar(b,"s40")}<span><b>Order ${o.id}</b><span>${o.n} item${o.n===1?"":"s"} · ${usd(o.total)}</span></span><i class="${o.paid?"paid":""}">${o.paid?"Paid":"Pending"}</i></div>
+    <div class="tx">${o.paid?"Payment received. Your order is confirmed.":"Thanks for your order. Review it and pay here to confirm."}${meta(o.t||(o.t=now()))}</div>
+    <div class="btns"><button onclick="reviewPay('${o.id}')">${o.paid?"View order details":"Review and pay"}</button></div></div>`;
+}
+function reviewPay(id){
+  const o=ORDERS[id]; if(!o) return; const b=BRANDS[CHATS.find(c=>c.id===o.chat).biz];
+  $("sheet").innerHTML = `<div class="grab"></div><h3>${o.paid?"Order details":"Review and pay"}</h3><div class="csub">${esc(b.name)} · Order ${o.id}</div>
+    ${o.items.map(i=>lineRow(i,`<span class="lq">× ${i.qty}</span>`)).join("")}
+    <div class="tot sm"><span>Subtotal</span><span>${usd(o.total)}</span></div>
+    <div class="tot sm"><span>Shipping</span><span>Free</span></div>
+    <div class="tot"><span>Total</span><b>${usd(o.total)}</b></div>
+    ${o.paid?`<div class="paidline"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.500l4.500 4.500L19 7.500"/></svg>Paid with card ending 4242</div><button class="x" onclick="closeSheet()">Close</button>`
+    :`<div class="pm"><span class="cardic"></span><span><b>Card ending 4242</b><span>Saved payment method</span></span><em>Change</em></div>
+    <button class="go" id="paybtn" onclick="pay('${id}')">Pay ${usd(o.total)}</button>
+    <small style="text-align:center">Payments are processed securely. ${esc(b.name)} does not see your card details.</small>`}`;
+  $("toast").classList.remove("on"); $("sheet").classList.add("on"); $("scrim").classList.add("on");
+}
+function pay(id){
+  const o=ORDERS[id], btn=$("paybtn"); if(!o || o.paid || btn.disabled) return;
+  btn.disabled=true; btn.innerHTML=`<span class="spin"></span>`;
+  setTimeout(()=>{
+    o.paid=true;
+    $("sheet").innerHTML=`<div class="grab"></div><div class="paydone"><span class="bigok"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.500l4.500 4.500L19 7.500"/></svg></span><b>Payment successful</b><span>${usd(o.total)} paid to ${esc(BRANDS[CHATS.find(c=>c.id===o.chat).biz].name)}</span></div>`;
+    const el=document.getElementById("ord-"+id); if(el) el.outerHTML=orderBubble(o);
+    setTimeout(()=>{ closeSheet(); pushMsg(o.chat,{html:`<div class="b first">Your order ${o.id} is confirmed. We'll send tracking updates in this chat.${meta(now())}</div>`}); }, 1500);
+  }, 1500);
 }
 
 /* ================= Catalog ================= */
-function openCatalog(anim="push"){
-  openChatId="macys";
+let catChat="macys";
+function openCatalog(chat="macys", anim="push"){
+  catChat=chat; openChatId=chat;
+  const shop=SHOPS[chat], biz=BRANDS[CHATS.find(c=>c.id===chat).biz], n=cartCount(chat);
   const el=$("s-catalog"); dropSlots(el);
   el.innerHTML = `
-  <div class="chdr"><button class="back" onclick="openChat('macys','pop')" aria-label="Back">${I.back}</button><span class="ttl">Catalog</span><button class="cart" onclick="toast(cart?cart+' item'+(cart>1?'s':'')+' in your cart':'Your cart is empty')" aria-label="Cart">${I.cart}<i id="cartn" class="${cart?"on":""}">${cart||""}</i></button></div>
+  <div class="chdr"><button class="back" onclick="openChat('${chat}','pop')" aria-label="Back">${I.back}</button><span class="ttl">Catalog</span><button class="cart" onclick="openCart('${chat}')" aria-label="Cart">${I.cart}<i data-cartbadge="${chat}" class="${n?"on":""}">${n||""}</i></button></div>
   <div class="scroll" id="fmt-catalog">
-    <div class="biz">${avatar("macys","s52")}<span><b>Macy's${I.vf}</b><span>Department store</span></span></div>
-    <div class="coll">Holiday apparel</div><div class="collsub">${CATALOG.length} items</div>
-    ${CATALOG.map((it,i)=>{ const b=BRANDS[it.b], id="cat"+(++seq); return `
+    <div class="biz">${avatar(biz,"s52")}<span><b>${esc(biz.name)}${I.vf}</b><span>${esc(shop.kind)}</span></span></div>
+    <div class="coll">${esc(shop.title)}</div><div class="collsub">${shop.items.length} item${shop.items.length===1?"":"s"}</div>
+    ${shop.items.map(it=>{ const b=BRANDS[it.b], p=PRODUCTS[it.b], id="cat"+(++seq); return `
     <div class="item">${flick(id,it.b,true)}
       <div class="inf"><div class="br">${esc(b.name)}</div>
-      <div class="pn" ${it.title?"":`data-vname="${id}"`}>${esc(it.title||b.variants[0].n)}</div>
+      <div class="pn" ${p.title?"":`data-vname="${id}"`}>${esc(p.title||b.variants[0].n)}</div>
+      <div class="price">${usd(p.price)}</div>
       <div class="ds">${esc(it.ds)}</div>
-      <div class="cta"><button class="p" onclick="addCart(this,'${id}')">Add to cart</button><button onclick="askAbout('${id}')">Message business</button></div></div>
+      <div class="cta"><button class="p" onclick="addToCart('${chat}','${id}',this)"><span>Add to cart</span></button><button onclick="askAbout('${id}')">Message business</button></div></div>
     </div>`; }).join("")}
-    <div style="height:40px"></div>
-  </div>`;
+    <div style="height:90px"></div>
+  </div>
+  <button class="cartbar ${n?"on":""}" data-cartbar="${chat}" onclick="openCart('${chat}')"><span>View cart</span><em>${n} item${n===1?"":"s"} · ${usd(cartTotal(chat))}</em></button>`;
   show("s-catalog", anim);
 }
-function addCart(btn,id){ if(btn.classList.contains("done")) return; cart++; btn.classList.add("done"); btn.classList.remove("p"); btn.textContent="Added"; const n=$("cartn"); n.textContent=cart; n.classList.add("on"); toast(`${variantOf(id).n} added to cart`); }
-function askAbout(id){ const s=SLOTS[id], name=BRANDS[s.brand].name+" "+variantOf(id).n; openChat("macys","pop"); const i=$("msg"); i.value=`Is the ${name} available in my size?`; $("inbar").classList.add("typing"); i.focus({preventScroll:true}); }
+function askAbout(id){ const s=SLOTS[id], name=BRANDS[s.brand].name+" "+variantOf(id).n; openChat(catChat,"pop"); const i=$("msg"); i.value=`Is the ${name} available in my size?`; $("inbar").classList.add("typing"); i.focus({preventScroll:true}); }
 
 /* ================= Updates + Status ================= */
 const seen = new Set();
@@ -723,17 +869,17 @@ function openLink(brand, url){
   $("sheet").innerHTML = `<div class="grab"></div><div class="dm">${avatar(b,"s40")}<span><b>${esc(b.name)}</b><span>${esc(host)}</span></span></div>
     <p>The demo ends here. In the app this opens the product page for the option picked in the Flick.</p>
     <a href="${esc(url)}" target="_blank" rel="noopener" onclick="closeSheet()">Open ${esc(host)}</a><button class="x" onclick="closeSheet()">Close</button>`;
-  $("sheet").classList.add("on"); $("scrim").classList.add("on");
+  $("toast").classList.remove("on"); $("sheet").classList.add("on"); $("scrim").classList.add("on");
 }
 function openFormats(){
   $("sheet").innerHTML = `<div class="grab"></div><h3>Flicks formats</h3>${FORMATS.map(([k,l])=>`<button class="fbtn" onclick="closeSheet();jump('${k}')">${l}</button>`).join("")}
     <small>Concept demo by Flam. Not affiliated with or endorsed by WhatsApp, Meta or any brand shown.</small>`;
-  $("sheet").classList.add("on"); $("scrim").classList.add("on");
+  $("toast").classList.remove("on"); $("sheet").classList.add("on"); $("scrim").classList.add("on");
 }
 function closeSheet(){ $("sheet").classList.remove("on"); $("scrim").classList.remove("on"); }
 function jump(k){
   if(k==="promo") openChat("nike");
-  else if(k==="catalog") openCatalog();
+  else if(k==="catalog") openCatalog("macys");
   else openStatus(0);
 }
 
