@@ -92,6 +92,8 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
 .sc .bgc img{width:100%;height:100%;object-fit:cover}
 .sc .bgc img.lg{object-fit:contain}
 .sc .bgc b{font-size:19px;font-weight:800;letter-spacing:.02em;opacity:.96;padding:0 6px;text-align:center}
+.sc .flick{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;background:transparent;pointer-events:none}
+.sc .flick .fstate,.sc .flick .fwarn{display:none}
 .sc::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.18),transparent 35%,transparent 55%,rgba(0,0,0,.55))}
 .sc .ring{position:absolute;top:8px;left:8px;z-index:2;padding:2px;border-radius:50%;border:2.5px solid var(--green);background:transparent}
 .sc.seen .ring{border-color:rgba(255,255,255,.65)}
@@ -471,7 +473,7 @@ const I = {
 };
 
 /* ================= Flick runtime (same bridge as the other platform demos) ================= */
-function tagDoc(slotId, b, noCta, gest){
+function tagDoc(slotId, b, noCta, gest, prev){
   const bridge = `/* Phones with hardware AV1 fail to play some Flicks: hide AV1 so the player uses VP9, HEVC or H.264. */(function(){var av=function(s){return /av01|av1/i.test(String(s||''))};try{if(window.VideoDecoder&&VideoDecoder.isConfigSupported){var o=VideoDecoder.isConfigSupported.bind(VideoDecoder);VideoDecoder.isConfigSupported=function(q){return q&&av(q.codec)?Promise.resolve({supported:false,config:q}):o(q)}}}catch(e){}try{var mc=navigator.mediaCapabilities;if(mc&&mc.decodingInfo){var od=mc.decodingInfo.bind(mc);mc.decodingInfo=function(q){return q&&q.video&&av(q.video.contentType)?Promise.resolve({supported:false,smooth:false,powerEfficient:false}):od(q)}}}catch(e){}try{for(var i=sessionStorage.length-1;i>=0;i--){var k=sessionStorage.key(i);if(k&&k.indexOf('vrtx_cap_')===0)sessionStorage.removeItem(k)}}catch(e){}})();(function(){var S=${JSON.stringify(slotId)};function t(m){m.flam=1;m.slot=S;try{parent.postMessage(m,"*")}catch(e){}}
 window.__vxOpen=function(u){t({type:"cta",url:u||""});return true};
 window.ExitApi={exit:function(n,u){t({type:"cta",url:u||""})}};
@@ -487,7 +489,8 @@ window.addEventListener("error",function(e){var s=e.target;if(s&&s.tagName==="SC
   const cfg = b.adConfig ? `<script>window.AD_CONFIG=window.AD_CONFIG||{};window.AD_CONFIG.dsp="dv360_studio";window.AD_CONFIG.publisherInfo={"publisher_id":"\${PUBLISHER_ID}","adsxt_publisher_id":"\${ADSXT_PUBLISHER_ID}","universal_site_id":"\${UNIVERSAL_SITE_ID}","source_url":"\${SOURCE_URL}","source_url_enc":"\${SOURCE_URL_ENC}","adsxt_ad_system_domain":"\${ADSXT_AD_SYSTEM_DOMAIN}"};window.AD_CONFIG.clickTracker={"mode":"exit","template":""};<\/script>` : "";
   const fonts = b.fontScan ? `<script>(function(){var seen={},head=document.head||document.documentElement,until=Date.now()+3e4;function add(css){if(seen[css])return;seen[css]=1;var s=document.createElement("style");s.textContent=css;head.appendChild(s)}function scan(){try{var ps=document.getElementsByTagName("vertex-player");for(var i=0;i<ps.length;i++){var r=ps[i].shadowRoot;if(!r)continue;var n=r.querySelectorAll("style,link[rel=stylesheet]");for(var j=0;j<n.length;j++){var el=n[j];if(el.tagName==="LINK"){if(/fonts\\.googleapis\\.com/.test(el.href)&&!seen[el.href]){seen[el.href]=1;var l=document.createElement("link");l.rel="stylesheet";l.href=el.href;head.appendChild(l)}continue}var m=(el.textContent||"").match(/@font-face\\s*\\{[^}]*\\}/g);if(m)add(m.join(""))}}}catch(e){}if(Date.now()<until)setTimeout(scan,250)}scan()})();<\/script>` : "";
   /* Promotional messages and catalogs have their own buttons, so the Flick's built-in CTA is hidden there. */
-  const hide = noCta ? `<script>(function(){var css="[data-vertex-trigger]{visibility:hidden!important;opacity:0!important;pointer-events:none!important}",until=Date.now()+6e4;function scan(){try{var ps=document.getElementsByTagName("vertex-player");for(var i=0;i<ps.length;i++){var r=ps[i].shadowRoot;if(r&&!r.querySelector("style[data-nocta]")){var st=document.createElement("style");st.setAttribute("data-nocta","");st.textContent=css;r.appendChild(st)}}}catch(e){}if(Date.now()<until)setTimeout(scan,150)}scan()})();<\/script>` : "";
+  /* Status previews show only the Flick's video: its overlay layer and sound button are hidden. */
+  const hide = (noCta||prev) ? `<script>(function(){var css=${JSON.stringify(prev ? "#ad-root{visibility:hidden!important}#vp-container>button{display:none!important}" : "[data-vertex-trigger]{visibility:hidden!important;opacity:0!important;pointer-events:none!important}")},until=Date.now()+6e4;function scan(){try{var ps=document.getElementsByTagName("vertex-player");for(var i=0;i<ps.length;i++){var r=ps[i].shadowRoot;if(r&&!r.querySelector("style[data-nocta]")){var st=document.createElement("style");st.setAttribute("data-nocta","");st.textContent=css;r.appendChild(st)}}}catch(e){}if(Date.now()<until)setTimeout(scan,150)}scan()})();<\/script>` : "";
   /* Status: report drags from inside the Flick so the viewer can swipe between statuses; taps still reach the Flick. */
   const swipe = gest ? `<style>html,body{touch-action:none;-webkit-user-select:none;user-select:none}</style><script>(function(){var S=${JSON.stringify(slotId)},sx=0,sy=0,on=false,mv=false,kill=false;function p(ph,dx,dy){try{parent.postMessage({flam:1,slot:S,type:"g",ph:ph,dx:dx,dy:dy},"*")}catch(e){}}
 addEventListener("pointerdown",function(e){if(e.isPrimary===false)return;on=true;mv=false;kill=false;sx=e.clientX;sy=e.clientY;p("s",0,0)},true);
@@ -515,8 +518,8 @@ const $ = id => document.getElementById(id);
 let toastT; function toast(t){ const el=$("toast"); el.textContent=t; el.classList.add("on"); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove("on"),2200); }
 
 let SLOTS = {}, seq = 0;
-function flick(id, brand, noCta, gest){
-  SLOTS[id] = { brand, noCta:!!noCta, gest:!!gest, ready:false, error:false, lastCta:0, variant:0, timer:null, mounted:false };
+function flick(id, brand, noCta, gest, prev){
+  SLOTS[id] = { brand, noCta:!!noCta, gest:!!gest, prev:!!prev, ready:false, error:false, lastCta:0, variant:0, timer:null, mounted:false };
   const b=BRANDS[brand];
   return `<div class="flick ${b.dark?"dark":""} ${b.ar||""}" data-slot="${id}"><div class="fstate"></div></div>`;
 }
@@ -542,8 +545,8 @@ function mount(host){
   /* Each Flick runs at its design size and is scaled to its slot, as in the AppLovin demo. */
   const [bw,bh]=baseOf(BRANDS[s.brand]);
   f.width=bw; f.height=bh; f.style.width=bw+"px"; f.style.height=bh+"px";
-  f.srcdoc=tagDoc(id, BRANDS[s.brand], s.noCta, s.gest);
-  const fit=()=>{ const w=host.clientWidth,h=host.clientHeight; if(!w||!h) return; const sc=Math.min(w/bw,h/bh); s.sc=sc; f.style.transform=`translate(${(w-bw*sc)/2}px,${(h-bh*sc)/2}px) scale(${sc})`; };
+  f.srcdoc=tagDoc(id, BRANDS[s.brand], s.noCta, s.gest, s.prev);
+  const fit=()=>{ const w=host.clientWidth,h=host.clientHeight; if(!w||!h) return; const sc=s.prev?Math.max(w/bw,h/bh):Math.min(w/bw,h/bh); s.sc=sc; f.style.transform=`translate(${(w-bw*sc)/2}px,${(h-bh*sc)/2}px) scale(${sc})`; };
   fit(); s.ro=new ResizeObserver(fit); s.ro.observe(host);
   host.prepend(f);
   s.timer=setTimeout(()=>{
@@ -873,6 +876,7 @@ function askAbout(id){ const s=SLOTS[id], name=BRANDS[s.brand].name+" "+variantO
 /* ================= Updates + Status ================= */
 const seen = new Set();
 function renderUpdates(){
+  dropSlots($("s-updates"));
   $("s-updates").innerHTML = `
   <div class="scroll">
     <div class="big">Updates<span class="rt"><span class="ic">${I.search}</span><span class="ic">${I.dots}</span></span></div>
@@ -881,7 +885,7 @@ function renderUpdates(){
       <div class="sc me"><span class="av s40" style="position:absolute;top:8px;left:8px;background:#c8ced3"><img src="${U("photo-1618244972963-dbee1a7edc95")}" alt="" onerror="this.remove()"></span><span class="plus"><svg width="10" height="10" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M9 3v12M3 9h12"/></svg></span><span class="n">Add status</span></div>
       ${STATUS.map((s,i)=>{ const b=BRANDS[s.b], img=b.variants.find(v=>v.img); return `
       <button class="sc ${seen.has(s.b)?"seen":""}" onclick="openStatus(${i})">
-        <span class="bgc" style="background:${img?"#f3f3f3":(b.lbg||"#fff")}">${img?`<img src="${img.img}" alt="" data-c="${b.avc}" data-n="${esc(b.name)}" onerror="scFail(this)">`:`<img class="lg" src="${esc(b.logo||("logos/"+b.key+".png"))}" alt="" data-c="${b.avc}" data-n="${esc(b.name)}" onerror="scFail(this)">`}</span>
+        <span class="bgc" style="background:${img?"#f3f3f3":(b.lbg||"#fff")}">${img?`<img src="${img.img}" alt="" data-c="${b.avc}" data-n="${esc(b.name)}" onerror="scFail(this)">`:`<img class="lg" src="${esc(b.logo||("logos/"+b.key+".png"))}" alt="" data-c="${b.avc}" data-n="${esc(b.name)}" onerror="scFail(this)">`}${flick("sp"+(++seq),s.b,false,false,true)}</span>
         <span class="ring">${avatar(b,"s36")}</span><span class="n">${esc(b.name)}</span>
       </button>`; }).join("")}
     </div>
