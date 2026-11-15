@@ -215,6 +215,10 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
 .cempty .newc{display:flex;gap:8px;align-items:center;justify-content:center;height:46px;width:100%;border-radius:23px;background:var(--green);color:#fff;font-size:16px;font-weight:600}
 
 /* ---------- cart, order, payment ---------- */
+.cart.hc{padding:0;margin-right:-4px}
+.cart.hc i{top:-6px;right:-8px}
+.cart.bump{animation:bump .45s var(--ease)}
+@keyframes bump{0%{transform:scale(.5)}55%{transform:scale(1.25)}100%{transform:none}}
 .b .pr{font-weight:600;margin-top:3px}
 .b .btns button.ok{color:#15603e;background:#eef8f1}
 .b.sentcart{width:min(280px,78%);max-width:none;padding:3px 3px 0}
@@ -741,7 +745,6 @@ const CART_SM = I.cart.replace('width="23" height="23"','width="17" height="17"'
 function msgBtns(chat, slot, extra){
   const n=cartCount(chat);
   return `<div class="btns"><button onclick="addToCart('${chat}','${slot}',this)">${CART_SM}<span>Add to cart</span></button>
-    <button data-viewcart="${chat}" onclick="openCart('${chat}')" style="${n?"":"display:none"}">View cart (<span data-cartn="${chat}">${n}</span>)</button>
     <button onclick="shop('${slot}')">${I.link}View product</button>${extra||""}</div>`;
 }
 function chatBody(c){
@@ -803,7 +806,7 @@ function openChat(id, anim="push"){
   <div class="chdr">
     <button class="back" onclick="goTab('chats','pop')" aria-label="Back">${I.back}</button>
     <span class="who">${avatar(c,"s36")}<span><b>${esc(b?b.name:c.name)}${b?I.vf:""}</b><span>${b?"Official business account":"tap here for contact info"}</span></span></span>
-    <span class="acts">${SHOPS[id]?`<button id="fmt-shopbtn" onclick="openCatalog('${id}')" aria-label="Catalog">${I.shop}</button>`:""}${I.tabs.calls.replace('width="26" height="26"','width="23" height="23"')}</span>
+    <span class="acts">${CARTS[id]?`<button class="cart hc" data-carthdr="${id}" onclick="openCart('${id}')" aria-label="Cart" style="${cartCount(id)?"":"display:none"}">${I.cart}<i data-cartbadge="${id}" class="on">${cartCount(id)||""}</i></button>`:""}${SHOPS[id]?`<button id="fmt-shopbtn" onclick="openCatalog('${id}')" aria-label="Catalog">${I.shop}</button>`:""}${I.tabs.calls.replace('width="26" height="26"','width="23" height="23"')}</span>
   </div>
   <div class="scroll wall" id="chat-scroll"><div class="msgs" id="msgs">${chatBody(c)}</div></div>
   <form class="inbar" id="inbar" onsubmit="return sendMsg(event)">${I.plus}<span class="f"><input id="msg" placeholder="" autocomplete="off" oninput="$('inbar').classList.toggle('typing',!!this.value.trim())"></span><span class="idle" style="display:flex;gap:14px">${I.cam}${I.mic}</span><button class="send" aria-label="Send">${I.send}</button></form>`;
@@ -836,6 +839,7 @@ function syncCart(chat){
   const n=cartCount(chat);
   document.querySelectorAll(`[data-cartn="${chat}"]`).forEach(e=>e.textContent=n);
   document.querySelectorAll(`[data-viewcart="${chat}"]`).forEach(e=>e.style.display=n?"":"none");
+  document.querySelectorAll(`[data-carthdr="${chat}"]`).forEach(e=>{ e.style.display=n?"":"none"; e.classList.remove("bump"); void e.offsetWidth; if(n) e.classList.add("bump"); });
   document.querySelectorAll(`[data-cartbadge="${chat}"]`).forEach(e=>{ e.textContent=n||""; e.classList.toggle("on",!!n); });
   document.querySelectorAll(`[data-cartbar="${chat}"]`).forEach(e=>{ e.classList.toggle("on",!!n); const t=e.querySelector("em"); if(t) t.textContent=`${n} item${n===1?"":"s"} · ${usd(cartTotal(chat))}`; });
 }
@@ -1083,7 +1087,7 @@ function jump(k){
 /* ================= freshness =================
    Phones and in-app browsers hold on to an old copy of this page. On load, ask the server which build is current
    and reload once onto it if this copy is older. */
-const BUILD="1794786205";
+const BUILD="1794786451";
 fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ t=t.trim();
   if(t && t!==BUILD && !new URLSearchParams(location.search).get("v")?.includes(t)) location.replace(location.pathname+"?v="+t); }).catch(()=>{});
 
