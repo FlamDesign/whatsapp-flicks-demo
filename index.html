@@ -114,7 +114,7 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
 
 /* ---------- chat ---------- */
 .chdr{display:flex;align-items:center;gap:8px;height:48px;padding:0 12px 6px 6px;background:var(--bar);border-bottom:.5px solid #d3d3d3;flex:none;z-index:3}
-#s-chat,#s-catalog{background:var(--bar)}
+#s-chat,#s-catalog,#s-pdp{background:var(--bar)}
 .back{display:flex;align-items:center;color:#000;height:40px;padding:0 2px 0 4px;font-size:16px;gap:1px}
 .chdr .who{flex:1;min-width:0;display:flex;gap:9px;align-items:center;text-align:left}
 .chdr .who b{display:flex;align-items:center;gap:4px;font-size:16.5px;font-weight:600;white-space:nowrap;overflow:hidden}
@@ -213,6 +213,25 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
 .cempty p{font-size:15px;line-height:1.4;color:var(--sub);margin:0 0 14px}
 .cempty .lnk{color:var(--green-d);font-weight:600;font-size:15px;margin-bottom:22px}
 .cempty .newc{display:flex;gap:8px;align-items:center;justify-content:center;height:46px;width:100%;border-radius:23px;background:var(--green);color:#fff;font-size:16px;font-weight:600}
+
+/* ---------- product page ---------- */
+#s-pdp .scroll{background:#fff}
+.pinf{padding:14px 16px 0}
+.pinf h2{font-size:21px;line-height:1.2;margin:0 0 4px;letter-spacing:-.01em}
+.pprice{font-size:17px;color:#111;margin-bottom:10px}
+.pinf p{font-size:15.500px;line-height:1.4;color:#3b4a54;margin:0 0 12px}
+.plink{display:flex;align-items:center;gap:7px;color:var(--green-d);font-size:15.500px;font-weight:500;padding:10px 0;border-top:.5px solid #e2e2e2;width:100%;text-align:left}
+.pbar{position:absolute;left:0;right:0;bottom:0;display:flex;gap:10px;align-items:center;padding:10px 14px 30px;background:rgba(255,255,255,.96);border-top:.5px solid #dcdcdc;z-index:4}
+.pb{flex:1;height:46px;border-radius:23px;font-size:16px;font-weight:600;background:#eef8f1;color:var(--green-d)}
+.pb.p{background:var(--green);color:#fff}
+.qty.big{height:46px;border-radius:23px;padding:0 6px;flex:1;justify-content:space-between}
+.qty.big button{width:40px;height:40px;font-size:24px}.qty.big b{font-size:17px}
+.chead{display:flex;justify-content:space-between;align-items:center}
+.chead h3{margin:0 0 10px}.chead button{color:var(--green-d);font-size:16px;font-weight:500;margin-bottom:10px}
+.addmore{display:block;color:var(--green-d);font-size:15.500px;font-weight:600;padding:14px 0 2px}
+.csend{display:flex;gap:10px;align-items:center;margin-top:12px}
+.csend .f{flex:1;height:42px;border-radius:21px;background:#f0f2f5;display:flex;align-items:center;padding:0 16px;color:#8a8a8e;font-size:16px}
+.csend button{width:44px;height:44px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;flex:none}
 
 /* ---------- cart, order, payment ---------- */
 .cart.hc{padding:0;margin-right:-4px}
@@ -327,6 +346,7 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
   .vbot{padding-bottom:calc(10px + var(--sab))}
   .sheet{padding-bottom:calc(20px + var(--sab))}
   .cartbar{bottom:calc(14px + var(--sab))}
+  .pbar{padding-bottom:calc(12px + var(--sab))}
   .fab{display:flex;position:absolute;right:12px;bottom:calc(70px + var(--sab));z-index:65;height:42px;padding:0 18px;border-radius:21px;background:#0b0b0b;color:#fff;font-size:15px;font-weight:700;align-items:center;gap:9px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
   .fab.up{display:none}
   .b.tpl{width:86%}
@@ -359,6 +379,7 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
       <section class="scr" id="s-other"></section>
       <section class="scr" id="s-chat"></section>
       <section class="scr" id="s-catalog"></section>
+      <section class="scr" id="s-pdp"></section>
       <section class="scr" id="viewer"></section>
 
       <nav class="tabbar" id="tabbar"></nav>
@@ -494,6 +515,7 @@ v.addEventListener("vertex-ready",function(){t({type:"ready"})});
 v.addEventListener("vertex-error",function(e){var d=e.detail||{};if(d.recovered||d.severity==="warning"||/WebGPU/.test(d.message||""))return;t({type:"warn",msg:(d.message||d.code||"render error")+""})});
 v.addEventListener("vertex-cta",function(e){var d=e.detail||{};t({type:"cta",url:d.url||""})});
 v.addEventListener("vertex-diff-change",function(e){var d=e.detail||{};t({type:"switch",diff:+d.diff||0})});}
+window.addEventListener("message",function(e){var d=e.data;if(!d||d.flamCmd!=="diff")return;try{var r=document.querySelector("vertex-player").shadowRoot,b=r.querySelector('button[data-vertex-diff="'+(+d.i)+'"]');if(b)b.click()}catch(x){}});
 window.addEventListener("message",function(e){var d=e.data;if(!d||d.flamCmd!=="cta")return;try{var vp=document.querySelector("vertex-player"),r=vp&&vp.shadowRoot,els=r?r.querySelectorAll("[data-vertex-trigger]"):[];for(var i=0;i<els.length;i++){if(getComputedStyle(els[i]).display!=="none"){els[i].click();return}}}catch(x){}t({type:"nocta"})});
 new MutationObserver(function(){var v=document.querySelector("vertex-player");if(v)hook(v)}).observe(document.documentElement,{childList:true,subtree:true});
 window.addEventListener("error",function(e){var s=e.target;if(s&&s.tagName==="SCRIPT")t({type:"error",msg:"Could not load "+s.src})},true);})();`;
@@ -550,6 +572,7 @@ function shop(id){
 function syncVariant(id){
   const s=SLOTS[id]; if(!s) return;
   const n=variantOf(id).n;
+  if(PDP && id===PDP.slot && cur==="s-pdp") renderPbar();
   document.querySelectorAll(`[data-vname="${id}"]`).forEach(el=>{ if(el.textContent===n) return; el.style.opacity=0; setTimeout(()=>{ el.textContent=n; el.style.opacity=1; },150); });
 }
 let io=null;
@@ -592,6 +615,7 @@ window.addEventListener("message", e=>{
   const host=document.querySelector(`.flick[data-slot="${m.slot}"]`);
   if(!host || e.source!==host.querySelector("iframe")?.contentWindow) return;
   (window.__FL=window.__FL||[]).push(m.slot+":"+m.type);
+  if(m.type==="ready" && PDP && m.slot===PDP.slot && PDP.want>0){ const w=PDP.want; PDP.want=0; try{ host.querySelector("iframe").contentWindow.postMessage({flamCmd:"diff",i:w},"*"); }catch(_){} }
   if(m.type==="ready"){ s.ready=true; clearTimeout(s.timer); host.classList.add("rdy"); host.querySelector(".fstate")?.classList.add("hide"); host.querySelector(".fwarn")?.remove(); }
   else if(m.type==="g"){ gesture(m.ph, m.dx*(s.sc||1), m.dy*(s.sc||1)); return; }
   else if(m.type==="warn"){ console.warn("[flicks] player error", m.slot, m.msg); host.classList.add("rdy"); host.querySelector(".fstate")?.classList.add("hide"); }
@@ -620,13 +644,14 @@ function renderTabbar(){
   const d=$("tabbar").querySelector(".dot"); if(d && !d.textContent) d.remove();
 }
 let hDepth=0, ignorePops=0, fromPop=false, sheetHist=false; const SNAP=[{}], HQ=[];
-const levelOf = id => id==="s-chat"||id==="viewer" ? 1 : id==="s-catalog" ? 2 : 0;
+const levelOf = id => id==="s-chat"||id==="viewer" ? 1 : id==="s-catalog" ? 2 : id==="s-pdp" ? (PDP&&PDP.from==="catalog"?3:2) : 0;
 function hflush(){ while(HQ.length && ignorePops===0) HQ.shift()(); }
 function hq(fn){ HQ.push(fn); hflush(); }
 function syncHistory(id){
   if(fromPop) return;
   const L=levelOf(id), from=hDepth;
-  if(L===2 && from<1) SNAP[1]={scr:"s-chat",chat:openChatId,tab};
+  if(L>=2 && from<1) SNAP[1]={scr:"s-chat",chat:openChatId,tab};
+  if(L===3 && from<2) SNAP[2]={scr:"s-catalog",chat:openChatId,tab};
   SNAP[L]={scr:id,chat:openChatId,tab};
   hDepth=L;
   if(L>from) hq(()=>{ for(let i=from+1;i<=L;i++) history.pushState({d:i},""); });
@@ -641,6 +666,7 @@ addEventListener("popstate", ()=>{
   try{
     if(hDepth===0){ if(cur==="viewer") closeStatus(); else goTab(sn.tab||tab,"pop"); }
     else if(sn.scr==="s-chat" && sn.chat) openChat(sn.chat,"pop");
+    else if(sn.scr==="s-catalog" && sn.chat) openCatalog(sn.chat,"pop");
     else goTab(tab,"pop");
   } finally { fromPop=false; }
 });
@@ -742,10 +768,8 @@ const cartTotal = c => (CARTS[c]||[]).reduce((a,i)=>a+i.qty*i.price,0);
 const SHOP_SM = I.shop.replace('width="22" height="22"','width="17" height="17"');
 const CART_SM = I.cart.replace('width="23" height="23"','width="17" height="17"');
 /* Buttons under a Flick message: the cart is filled from the message itself. */
-function msgBtns(chat, slot, extra){
-  const n=cartCount(chat);
-  return `<div class="btns"><button onclick="addToCart('${chat}','${slot}',this)">${CART_SM}<span>Add to cart</span></button>
-    <button onclick="shop('${slot}')">${I.link}View product</button>${extra||""}</div>`;
+function msgBtns(chat, slot, brand){
+  return `<div class="btns"><button onclick="openPdp('${chat}','${brand}','chat',SLOTS['${slot}']?SLOTS['${slot}'].variant:0)">View</button></div>`;
 }
 function chatBody(c){
   let h="";
@@ -758,7 +782,7 @@ function chatBody(c){
     <div class="b tpl first" id="fmt-promo">
       ${flick(id,"nike",true)}
       <div class="tx"><b>Black Friday is on.</b><br>The Universa training set is in the sale, in three colors made to move with you.<div class="pr">${usd(PRODUCTS.nike.price)}</div>${meta("9:12 AM")}</div>
-      ${msgBtns("nike",id)}
+      ${msgBtns("nike",id,"nike")}
     </div>`;
   } else if(c.id==="macys"){
     const id="mprod"+(++seq);
@@ -768,7 +792,7 @@ function chatBody(c){
     <div class="b tpl">
       ${flick(id,"levis",true)}
       <div class="tx"><b>Levi's <span data-vname="${id}">${esc(BRANDS.levis.variants[0].n)}</span></b><br>An easy fit that goes with everything, in three washes.<div class="pr">${usd(PRODUCTS.levis.price)}</div>${meta("8:47 AM")}</div>
-      ${msgBtns("macys",id,`<button onclick="openCatalog('macys')">${SHOP_SM}View catalog</button>`)}
+      ${msgBtns("macys",id,"levis")}
     </div>`;
   } else if(c.id==="cad"){
     const id="cadm"+(++seq);
@@ -786,7 +810,7 @@ function chatBody(c){
     <div class="b tpl first">
       ${flick(id,c.id,true)}
       <div class="tx"><b>${sony?"QuietComfort Ultra Earbuds":"Small brick, big possibilities."}</b><br>${sony?"Quiet when you want it, in a color that suits you.":"Three race cars, ready for the starting grid. Which one are you building first?"}<div class="pr">${usd(PRODUCTS[c.id].price)}</div>${meta(sony?"6:40 PM":"7:15 PM")}</div>
-      ${msgBtns(c.id,id,`<button onclick="openCatalog('${c.id}')">${SHOP_SM}View catalog</button>`)}
+      ${msgBtns(c.id,id,c.id)}
     </div>`;
   } else {
     h=`<div class="sys day">${c.time.includes(":")?"Today":c.time}</div>
@@ -847,14 +871,16 @@ const lineRow = (i,ctl) => `<div class="crow">${avatar(BRANDS[i.brand],"s40")}<s
 function openCart(chat){
   const cart=CARTS[chat], b=BRANDS[CHATS.find(c=>c.id===chat).biz];
   if(!cart.length){ closeSheet(); toast("Your cart is empty"); return; }
-  $("sheet").innerHTML = `<div class="grab"></div><h3>Your cart</h3><div class="csub">${esc(b.name)}</div>
+  const n=cartCount(chat);
+  $("sheet").innerHTML = `<div class="grab"></div><div class="chead"><h3>Your cart</h3><button onclick="closeSheet()" aria-label="Close">Close</button></div><div class="csub">${n} item${n===1?"":"s"} · ${esc(b.name)}</div>
     ${cart.map((i,k)=>lineRow(i,`<span class="qty"><button onclick="qty('${chat}',${k},-1)" aria-label="Less">−</button><b>${i.qty}</b><button onclick="qty('${chat}',${k},1)" aria-label="More">+</button></span>`)).join("")}
-    <div class="tot"><span>Subtotal</span><b>${usd(cartTotal(chat))}</b></div>
-    <button class="go" onclick="placeOrder('${chat}')">Place order</button>
+    <button class="addmore" onclick="closeSheet()">Add more</button>
+    <div class="tot"><span>Estimated total</span><b>${usd(cartTotal(chat))}</b></div>
+    <div class="csend"><span class="f">Add a message</span><button onclick="placeOrder('${chat}')" aria-label="Send to business">${I.send}</button></div>
     <small style="text-align:center">Your cart is sent to ${esc(b.name)} as a message.</small>`;
   sheetOn();
 }
-function qty(chat,k,d){ const c=CARTS[chat]; c[k].qty+=d; if(c[k].qty<=0) c.splice(k,1); syncCart(chat); openCart(chat); }
+function qty(chat,k,d){ const c=CARTS[chat]; c[k].qty+=d; if(c[k].qty<=0) c.splice(k,1); syncCart(chat); renderPbar(); c.length ? openCart(chat) : closeSheet(); }
 function placeOrder(chat){
   const items=CARTS[chat].map(i=>({...i})); if(!items.length) return;
   const b=BRANDS[CHATS.find(c=>c.id===chat).biz], n=items.reduce((a,i)=>a+i.qty,0), total=items.reduce((a,i)=>a+i.qty*i.price,0);
@@ -897,6 +923,48 @@ function pay(id){
   }, 1500);
 }
 
+/* ================= Product page =================
+   The route WhatsApp uses: a product message has one "View" button, which opens the product page inside the app.
+   Adding to the cart happens here, then the cart is sent to the business as a message. */
+let PDP=null;
+function prodName(brand, vi){ const p=PRODUCTS[brand], v=(BRANDS[brand].variants[vi]||BRANDS[brand].variants[0]).n; return p.title ? `${p.title}, ${v}` : v; }
+function openPdp(chat, brand, from, vi=0, anim="push"){
+  const b=BRANDS[brand], p=PRODUCTS[brand], biz=BRANDS[CHATS.find(c=>c.id===chat).biz];
+  const item=(SHOPS[chat]?.items||[]).find(i=>i.b===brand)||{};
+  PDP={ chat, brand, from, slot:"pdp"+(++seq), want:vi }; openChatId=chat; if(from==="catalog") catChat=chat;
+  const el=$("s-pdp"); dropSlots(el);
+  el.innerHTML = `
+  <div class="chdr"><button class="back" onclick="closePdp()" aria-label="Back">${I.back}</button><span class="ttl">${esc(biz.name)}</span><button class="cart" onclick="openCart('${chat}')" aria-label="Cart">${I.cart}<i data-cartbadge="${chat}" class="${cartCount(chat)?"on":""}">${cartCount(chat)||""}</i></button></div>
+  <div class="scroll pdp">
+    ${flick(PDP.slot,brand,true)}
+    <div class="pinf">
+      <h2 data-pname>${esc(prodName(brand,0))}</h2>
+      <div class="pprice">${usd(p.price)}</div>
+      <p>${esc(item.ds||"")}</p>
+      <button class="plink" onclick="shop('${PDP.slot}')">${I.link}<span>${esc(b.domain)}</span></button>
+    </div>
+    <div style="height:110px"></div>
+  </div>
+  <div class="pbar" id="pbar"></div>`;
+  show("s-pdp", anim); renderPbar();
+}
+function pdpItem(){ const s=SLOTS[PDP.slot]; const name=prodName(PDP.brand, s?s.variant:0); return { name, key:PDP.brand+"|"+name }; }
+function renderPbar(){
+  if(!PDP || !$("pbar")) return;
+  const it=pdpItem(), hit=CARTS[PDP.chat].find(i=>i.key===it.key), pn=document.querySelector("[data-pname]");
+  if(pn && pn.textContent!==it.name) pn.textContent=it.name;
+  $("pbar").innerHTML = hit
+    ? `<span class="qty big"><button onclick="pdpQty(-1)" aria-label="Less">−</button><b>${hit.qty}</b><button onclick="pdpQty(1)" aria-label="More">+</button></span><button class="pb p" onclick="openCart('${PDP.chat}')">View cart</button>`
+    : `<button class="pb" onclick="askAbout('${PDP.slot}')">Message business</button><button class="pb p" onclick="pdpQty(1)">Add to cart</button>`;
+}
+function pdpQty(d){
+  const it=pdpItem(), cart=CARTS[PDP.chat], k=cart.findIndex(i=>i.key===it.key);
+  if(k<0){ if(d>0) cart.push({ key:it.key, brand:PDP.brand, name:it.name, price:PRODUCTS[PDP.brand].price, qty:1 }); }
+  else { cart[k].qty+=d; if(cart[k].qty<=0) cart.splice(k,1); }
+  syncCart(PDP.chat); renderPbar();
+}
+function closePdp(){ if(!PDP) return; PDP.from==="catalog" ? openCatalog(PDP.chat,"pop") : openChat(PDP.chat,"pop"); }
+
 /* ================= Catalog ================= */
 let catChat="macys";
 function openCatalog(chat="macys", anim="push"){
@@ -914,14 +982,14 @@ function openCatalog(chat="macys", anim="push"){
       <div class="pn" ${p.title?"":`data-vname="${id}"`}>${esc(p.title||b.variants[0].n)}</div>
       <div class="price">${usd(p.price)}</div>
       <div class="ds">${esc(it.ds)}</div>
-      <div class="cta"><button class="p" onclick="shop('${id}')">View product</button></div></div>
+      <div class="cta"><button class="p" onclick="openPdp('${chat}','${it.b}','catalog',SLOTS['${id}']?SLOTS['${id}'].variant:0)">View product</button></div></div>
     </div>`; }).join("")}
     <div style="height:90px"></div>
   </div>
   <button class="cartbar ${n?"on":""}" data-cartbar="${chat}" onclick="openCart('${chat}')"><span>View cart</span><em>${n} item${n===1?"":"s"} · ${usd(cartTotal(chat))}</em></button>`;
   show("s-catalog", anim);
 }
-function askAbout(id){ const s=SLOTS[id], name=BRANDS[s.brand].name+" "+variantOf(id).n; openChat(catChat,"pop"); const i=$("msg"); i.value=`Is the ${name} available in my size?`; $("inbar").classList.add("typing"); i.focus({preventScroll:true}); }
+function askAbout(id){ const s=SLOTS[id], name=BRANDS[s.brand].name+" "+variantOf(id).n; openChat(PDP?PDP.chat:catChat,"pop"); const i=$("msg"); i.value=`Is the ${name} available in my size?`; $("inbar").classList.add("typing"); i.focus({preventScroll:true}); }
 
 /* ================= Updates + Status ================= */
 const seen = new Set();
@@ -1086,7 +1154,7 @@ function jump(k){
 /* ================= freshness =================
    Phones and in-app browsers hold on to an old copy of this page. On load, ask the server which build is current
    and reload once onto it if this copy is older. */
-const BUILD="1794786826";
+const BUILD="1794786974";
 fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ t=t.trim();
   if(t && t!==BUILD && !new URLSearchParams(location.search).get("v")?.includes(t)) location.replace(location.pathname+"?v="+t); }).catch(()=>{});
 
