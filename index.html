@@ -1066,8 +1066,7 @@ function openLink(brand, url){
   sheetOn();
 }
 function openFormats(){
-  $("sheet").innerHTML = `<div class="grab"></div><h3>Explore Flicks</h3>${FORMATS.map(([k,l])=>`<button class="fbtn" onclick="closeSheet();jump('${k}')">${l}</button>`).join("")}
-    <small>Concept demo by Flam. Not affiliated with or endorsed by WhatsApp, Meta or any brand shown.</small>`;
+  $("sheet").innerHTML = `<div class="grab"></div><h3>Explore Flicks</h3>${FORMATS.map(([k,l])=>`<button class="fbtn" onclick="closeSheet();jump('${k}')">${l}</button>`).join("")}`;
   sheetOn();
 }
 function sheetOn(){
@@ -1087,7 +1086,7 @@ function jump(k){
 /* ================= freshness =================
    Phones and in-app browsers hold on to an old copy of this page. On load, ask the server which build is current
    and reload once onto it if this copy is older. */
-const BUILD="1794786451";
+const BUILD="1794786826";
 fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ t=t.trim();
   if(t && t!==BUILD && !new URLSearchParams(location.search).get("v")?.includes(t)) location.replace(location.pathname+"?v="+t); }).catch(()=>{});
 
