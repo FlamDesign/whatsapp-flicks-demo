@@ -910,7 +910,7 @@ function openCatalog(chat="macys", anim="push"){
       <div class="pn" ${p.title?"":`data-vname="${id}"`}>${esc(p.title||b.variants[0].n)}</div>
       <div class="price">${usd(p.price)}</div>
       <div class="ds">${esc(it.ds)}</div>
-      <div class="cta"><button class="p" onclick="addToCart('${chat}','${id}',this)"><span>Add to cart</span></button><button onclick="askAbout('${id}')">Message business</button></div></div>
+      <div class="cta"><button class="p" onclick="shop('${id}')">View product</button></div></div>
     </div>`; }).join("")}
     <div style="height:90px"></div>
   </div>
