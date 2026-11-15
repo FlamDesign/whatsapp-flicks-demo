@@ -729,7 +729,7 @@ function chatBody(c){
     <div class="b tpl first" id="fmt-promo">
       ${flick(id,"nike",true)}
       <div class="tx"><b>Black Friday is on.</b><br>The Universa training sets are part of the sale. Tap a look in the video to switch the outfit, then add the one you like to your cart.<div class="pr">${usd(PRODUCTS.nike.price)}</div>${meta("9:12 AM")}</div>
-      ${msgBtns("nike",id,`<button onclick="toast('You will no longer get offers from Nike')">${I.reply}Stop promotions</button>`)}
+      ${msgBtns("nike",id)}
     </div>`;
   } else if(c.id==="macys"){
     const id="mprod"+(++seq);
