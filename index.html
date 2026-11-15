@@ -175,6 +175,30 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
 .item .cta button.p{background:var(--green);color:#fff}
 .item .cta button.done{background:#d9fdd3;color:#15603e}
 
+/* ---------- calls, communities ---------- */
+.hub{display:flex;justify-content:space-between;padding:4px 22px 6px}
+.hub button{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12.500px;color:#111;width:68px}
+.hub button span{width:54px;height:54px;border-radius:50%;background:#f0f2f5;display:grid;place-items:center;color:#111}
+.row.call{padding-right:14px}
+.row.call .bd{min-height:60px;padding:9px 8px 9px 0;border-bottom:.5px solid #dcdcdc}
+.row.call .pv{display:flex;align-items:center;gap:5px;-webkit-line-clamp:1}
+.row.call.miss .nm,.row.call.miss .pv{color:#e53935}
+.row.call .cw{font-size:14px;color:var(--sub);align-self:center}
+.row.call .ci{color:#111;align-self:center;margin-left:10px}
+.e2e{display:flex;gap:5px;align-items:center;justify-content:center;font-size:12px;color:var(--sub);padding:18px 16px}
+.cempty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:26px 30px 0}
+.cart2{position:relative;width:150px;height:120px;margin-bottom:18px}
+.cart2 span{position:absolute;border-radius:50%}
+.cart2 .c1{left:35px;top:20px;width:80px;height:80px;background:#d9fdd3;color:#15603e;display:grid;place-items:center}
+.cart2 .c1 svg{width:44px;height:40px}
+.cart2 .c2{left:4px;top:8px;width:30px;height:30px;background:#cfe9ff}
+.cart2 .c3{right:6px;top:0;width:22px;height:22px;background:#ffe2b8}
+.cart2 .c4{right:0;bottom:8px;width:34px;height:34px;background:#f6d5e6}
+.cempty h4{font-size:21px;margin:0 0 8px;letter-spacing:-.01em}
+.cempty p{font-size:15px;line-height:1.4;color:var(--sub);margin:0 0 14px}
+.cempty .lnk{color:var(--green-d);font-weight:600;font-size:15px;margin-bottom:22px}
+.cempty .newc{display:flex;gap:8px;align-items:center;justify-content:center;height:46px;width:100%;border-radius:23px;background:var(--green);color:#fff;font-size:16px;font-weight:600}
+
 /* ---------- cart, order, payment ---------- */
 .b .pr{font-weight:600;margin-top:3px}
 .b .btns button.ok{color:#15603e;background:#eef8f1}
@@ -364,6 +388,12 @@ const BRANDS = {
   bj:{ name:"Ben & Jerry's", av:"B&J", avc:"#2a6fb7", domain:"benjerry.com", url:"https://www.benjerry.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_z1fp1a/ad.js",
     variants:[{n:"Cherry Garcia",img:IC("large_c272f189-7d9c-4c5d-ab83-48e12b1874dd.png")},{n:"Razz Up!"},{n:"Chunky Monkey",img:IC("large_1fca5e9d-fd60-48c2-a733-71a021963dc9.png")}] },
+  sony:{ name:"Sony", av:"SONY", avc:"#000", domain:"electronics.sony.com", url:"https://electronics.sony.com/",
+    src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_dj5rq6/ad.js",
+    variants:[{n:"Black"},{n:"White"},{n:"Blue"}] },
+  lego:{ name:"LEGO", av:"LEGO", avc:"#e3000b", domain:"lego.com", url:"https://www.lego.com/",
+    src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_u008vu/ad.js",
+    variants:[{n:"Option 1"},{n:"Option 2"},{n:"Option 3"}] },
   macys:{ name:"Macy's", av:"M", avc:"#b3121d", domain:"macys.com", url:"https://www.macys.com/" }
 };
 
@@ -372,23 +402,27 @@ const U = (id,w=160) => `https://images.unsplash.com/${id}?auto=format&fit=crop&
 const CHATS = [
   { id:"nike", biz:"nike", time:"9:12 AM", unread:1, pv:"Black Friday is on. Tap a look in the video to switch the outfit, then add the one you like to your cart." },
   { id:"macys", biz:"macys", time:"8:47 AM", unread:2, pv:"Levi's Baggy Overalls. Tap a look in the video to switch the wash, then add it to your cart." },
+  { id:"cad", biz:"cad", time:"8:30 AM", unread:1, pv:"One drive, three Cadillacs. Tap a model in the video to switch." },
   { id:"hike", name:"Weekend hikers", photo:"photo-1602333158618-dd71de539d3b", time:"8:15 AM", pv:"Jordan: Trailhead at 7, I'll bring coffee", snd:"Jordan", last:"Trailhead at 7, I'll bring coffee" },
-  { id:"priya", name:"Priya", photo:"photo-1578632292335-df3abbb0d586", time:"Yesterday", pv:"See you at 6", mine:true, last:"See you at 6" },
+  { id:"sony", biz:"sony", time:"Yesterday", unread:1, pv:"WH-CH720N noise canceling headphones. Tap a color in the video to switch." },
   { id:"fam", name:"Family", photo:"photo-1642335911245-238e13dcabf2", time:"Yesterday", pv:"Mom: Tree is up early this year", snd:"Mom", last:"Tree is up early this year" },
-  { id:"sam", name:"Sam", photo:"photo-1627323721367-94128c3fa0f7", time:"Yesterday", pv:"He has not let go of that toy since", last:"He has not let go of that toy since" },
-  { id:"book", name:"Book club", photo:"photo-1564078516393-cf04bd966897", time:"Friday", pv:"Nia: Chapter 12 by next week?", snd:"Nia", last:"Chapter 12 by next week?" },
-  { id:"dad", name:"Dad", photo:"photo-1559310589-2673bfe16970", time:"Thursday", pv:"Landed. Call you tonight", last:"Landed. Call you tonight" },
-  { id:"mia", name:"Mia Torres", photo:"photo-1516762689617-e1cffcef479d", time:"Wednesday", pv:"Sending the address now", mine:true, last:"Sending the address now" }
+  { id:"lego", biz:"lego", time:"Friday", pv:"Holiday builds are here. Tap a set in the video to switch." }
 ];
 /* Prices are illustrative. */
 const PRODUCTS = {
   nike:{ title:"Nike Universa training set", price:120 },
   levis:{ price:108 },
-  coach:{ price:450 }
+  coach:{ price:450 },
+  sony:{ title:"WH-CH720N headphones", price:149.99 },
+  lego:{ title:"LEGO holiday set", price:59.99 }
 };
 const SHOPS = {
   nike:{ title:"Black Friday", kind:"Sportswear", items:[
     { b:"nike", ds:"Switch the set in the video and see it move." }] },
+  sony:{ title:"Headphones", kind:"Electronics", items:[
+    { b:"sony", ds:"Light, all-day noise canceling. Tap a color in the video to switch." }] },
+  lego:{ title:"Holiday gifts", kind:"Toys", items:[
+    { b:"lego", ds:"Tap a set in the video to switch." }] },
   macys:{ title:"Holiday apparel", kind:"Department store", items:[
     { b:"levis", ds:"Three washes of the same overall. Tap a look in the video to switch." },
     { b:"coach", ds:"Three bags, one outfit. Tap a bag in the video to switch." },
@@ -540,6 +574,8 @@ window.addEventListener("message", e=>{
 function avatar(o, size){
   if(o.photo) return `<span class="av ${size}">${esc(o.name[0])}<img src="${U(o.photo)}" alt="" onerror="this.remove()"></span>`;
   const b = o.av ? o : BRANDS[o.biz||o];
+  /* To show a brand's own logo, set `logo` on that brand to an image file or URL you have the right to use. */
+  if(b.logo) return `<span class="av ${size}" style="background:#fff"><img src="${esc(b.logo)}" alt="${esc(b.name)}" style="object-fit:contain"></span>`;
   return `<span class="av ${size} ${b.av.length>2?"sm":""}" style="background:${b.avc}">${esc(b.av)}</span>`;
 }
 const TABS = [["updates","Updates"],["calls","Calls"],["comm","Communities"],["chats","Chats"],["settings","Settings"]];
@@ -568,7 +604,56 @@ function goTab(k, anim){
   tab=k; renderTabbar();
   if(k==="chats"){ renderChats(); show("s-chats", anim); }
   else if(k==="updates"){ renderUpdates(); show("s-updates", anim); }
+  else if(k==="calls"){ renderCalls(); show("s-other"); }
+  else if(k==="comm"){ renderCommunities(); show("s-other"); }
   else { const l=TABS.find(t=>t[0]===k)[1]; $("s-other").innerHTML=`<div class="tophdr"></div><div class="big">${l}</div><div class="empty">Nothing here in this demo</div>`; show("s-other"); }
+}
+
+/* ================= Calls and Communities ================= */
+const CALLS = [
+  { name:"Family", photo:"photo-1642335911245-238e13dcabf2", dir:"in", kind:"video", when:"Yesterday" },
+  { name:"Mom", photo:"photo-1512909006721-3d6018887383", dir:"miss", kind:"voice", when:"Yesterday" },
+  { name:"Jordan", photo:"photo-1621531518034-94ecf4778186", dir:"out", kind:"voice", when:"Friday" },
+  { name:"Weekend hikers", photo:"photo-1602333158618-dd71de539d3b", dir:"in", kind:"voice", when:"Thursday" },
+  { name:"Mom", photo:"photo-1512909006721-3d6018887383", dir:"out", kind:"video", when:"11/08/26" }
+];
+const CI = {
+  phone:I.tabs.calls.replace('width="26" height="26"','width="22" height="22"'),
+  sched:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.900" stroke-linecap="round" stroke-linejoin="round"><rect x="3.500" y="5" width="17" height="15.500" rx="3"/><path d="M3.500 10h17M8 3v4M16 3v4"/></svg>`,
+  pad:`<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">${[5,12,19].map(x=>[5,12,19].map(y=>`<circle cx="${x}" cy="${y}" r="2.100"/>`).join("")).join("")}</svg>`,
+  fav:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.900" stroke-linejoin="round"><path d="M12 20.500s-7.500-4.600-7.500-10.200A4.300 4.300 0 0 1 12 7.800a4.300 4.300 0 0 1 7.500 2.500c0 5.600-7.500 10.200-7.500 10.200z"/></svg>`,
+  arrow:d=>`<svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${d==="out"?"M3.500 10.500l7-7M5 3.500h5.500V9":"M10.500 3.500l-7 7M9 10.500H3.500V5"}"/></svg>`,
+  info:`<svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.500"/><circle cx="12" cy="7.700" r=".6" fill="currentColor"/></svg>`,
+  vid:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2.500" y="6" width="13" height="12" rx="3"/><path d="M15.500 10.500l6-3.500v10l-6-3.500z"/></svg>`
+};
+function renderCalls(){
+  $("s-other").innerHTML = `
+  <div class="tophdr"><span class="ic">${I.dots}</span><span class="rt"><span class="ic g">${I.plus}</span></span></div>
+  <div class="scroll">
+    <div class="big">Calls</div>
+    <div class="search">${I.search}<span>Search</span></div>
+    <div class="hub">${[["phone","Call"],["sched","Schedule"],["pad","Keypad"],["fav","Favorites"]].map(([k,l])=>`<button><span>${CI[k]}</span>${l}</button>`).join("")}</div>
+    <div class="sect" style="padding-top:8px">Recent</div>
+    ${CALLS.map(c=>`<div class="row call ${c.dir}">${avatar(c,"s40")}<span class="bd"><span class="l1"><span class="nm">${esc(c.name)}</span></span>
+      <span class="l2"><span class="pv">${c.kind==="video"?CI.vid:CI.arrow(c.dir==="out"?"out":"in")}${c.dir==="miss"?"Missed":c.dir==="out"?"Outgoing":"Incoming"}</span></span></span><span class="cw">${c.when}</span><span class="ci">${CI.info}</span></div>`).join("")}
+    <div class="e2e"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M17 9V7A5 5 0 0 0 7 7v2H5v12h14V9zm-8 0V7a3 3 0 0 1 6 0v2z"/></svg>Your personal calls are end-to-end encrypted</div>
+    <div class="tabpad"></div>
+  </div>`;
+}
+function renderCommunities(){
+  $("s-other").innerHTML = `
+  <div class="tophdr"><span class="ic">${I.dots}</span><span class="rt"><span class="ic g">${I.plus}</span></span></div>
+  <div class="scroll">
+    <div class="big">Communities</div>
+    <div class="cempty">
+      <div class="cart2"><span class="c1">${I.tabs.comm}</span><span class="c2"></span><span class="c3"></span><span class="c4"></span></div>
+      <h4>Stay connected with a community</h4>
+      <p>Communities bring members together in topic-based groups and make it easy to get admin announcements. Any community you're added to will appear here.</p>
+      <button class="lnk">See example communities <svg width="7" height="12" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-1px"><path d="M2 2l6 6-6 6"/></svg></button>
+      <button class="newc">${I.plus}New community</button>
+    </div>
+    <div class="tabpad"></div>
+  </div>`;
 }
 
 /* ================= Chats ================= */
@@ -594,7 +679,7 @@ let openChatId=null;
 const meta = (t,mine) => `<span class="meta">${t}${mine?I.ticks:""}</span>`;
 const now = () => new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
 const usd = n => "$"+n.toFixed(2);
-const CARTS = { nike:[], macys:[] }, EXTRA = { }, ORDERS = { };
+const CARTS = { nike:[], macys:[], sony:[], lego:[] }, EXTRA = { }, ORDERS = { };
 const cartCount = c => (CARTS[c]||[]).reduce((a,i)=>a+i.qty,0);
 const cartTotal = c => (CARTS[c]||[]).reduce((a,i)=>a+i.qty*i.price,0);
 const SHOP_SM = I.shop.replace('width="22" height="22"','width="17" height="17"');
@@ -628,6 +713,24 @@ function chatBody(c){
       <div class="tx"><b>Levi's <span data-vname="${id}">${esc(BRANDS.levis.variants[0].n)}</span></b><br>Tap a look in the video to switch the wash, then add it to your cart.<div class="pr">${usd(PRODUCTS.levis.price)}</div>${meta("8:47 AM")}</div>
       ${msgBtns("macys",id,`<button onclick="openCatalog('macys')">${SHOP_SM}View catalog</button>`)}
     </div>`;
+  } else if(c.id==="cad"){
+    const id="cadm"+(++seq);
+    h=`<div class="sys info">This business uses a secure service from Meta to manage this chat.</div>
+    <div class="sys day">Today</div>
+    <div class="b tpl first">
+      ${flick(id,"cad",true)}
+      <div class="tx"><b>One drive, three Cadillacs.</b><br>Tap a model in the video to switch between Optiq, Celestiq and Escalade-V, then book time with the one you want to drive.${meta("8:30 AM")}</div>
+      <div class="btns"><button onclick="testDrive('${id}')">${I.reply}Book a test drive</button><button onclick="shop('${id}')">${I.link}Visit website</button></div>
+    </div>`;
+  } else if(c.id==="sony" || c.id==="lego"){
+    const id=c.id+"m"+(++seq), sony=c.id==="sony";
+    h=`<div class="sys info">This business uses a secure service from Meta to manage this chat.</div>
+    <div class="sys day">${c.time}</div>
+    <div class="b tpl first">
+      ${flick(id,c.id,true)}
+      <div class="tx"><b>${sony?"WH-CH720N noise canceling headphones":"Holiday builds are here."}</b><br>${sony?"Tap a color in the video to switch, then add yours to the cart.":"Tap a set in the video to switch, then add your pick to the cart."}<div class="pr">${usd(PRODUCTS[c.id].price)}</div>${meta(sony?"6:40 PM":"10:05 AM")}</div>
+      ${msgBtns(c.id,id,`<button onclick="openCatalog('${c.id}')">${SHOP_SM}View catalog</button>`)}
+    </div>`;
   } else {
     h=`<div class="sys day">${c.time.includes(":")?"Today":c.time}</div>
     <div class="b ${c.mine?"o":""} first">${c.snd?`<span class="snd" style="color:#b4507a">${esc(c.snd)}</span>`:""}${esc(c.last)}${meta(c.time.includes(":")?c.time:"7:30 PM",c.mine)}</div>`;
@@ -657,6 +760,12 @@ function sendMsg(e){
   e.preventDefault(); const i=$("msg"), v=i.value.trim(); if(!v) return false;
   pushMsg(openChatId, {html:`<div class="b o first">${esc(v)}${meta(now(),true)}</div>`});
   i.value=""; $("inbar").classList.remove("typing"); return false;
+}
+
+function testDrive(slot){
+  const v=variantOf(slot).n;
+  pushMsg("cad",{html:`<div class="b o first">I'd like to book a test drive for the ${esc(v)}${meta(now(),true)}</div>`});
+  setTimeout(()=>pushMsg("cad",{html:`<div class="b first">Great choice. A Cadillac advisor will message you here to set a time for your ${esc(v)} test drive.${meta(now())}</div>`}),1400);
 }
 
 /* ================= Cart, order and payment ================= */
@@ -691,7 +800,7 @@ function qty(chat,k,d){ const c=CARTS[chat]; c[k].qty+=d; if(c[k].qty<=0) c.spli
 function placeOrder(chat){
   const items=CARTS[chat].map(i=>({...i})); if(!items.length) return;
   const b=BRANDS[CHATS.find(c=>c.id===chat).biz], n=items.reduce((a,i)=>a+i.qty,0), total=items.reduce((a,i)=>a+i.qty*i.price,0);
-  const id=(chat==="nike"?"NK":"MC")+"-"+(20000+Math.floor(Math.random()*70000));
+  const id=chat.slice(0,2).toUpperCase()+"-"+(20000+Math.floor(Math.random()*70000));
   ORDERS[id]={ id, chat, items, n, total, paid:false };
   CARTS[chat]=[]; closeSheet();
   if(!(cur==="s-chat" && openChatId===chat)) openChat(chat,"pop");
