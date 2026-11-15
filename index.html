@@ -19,7 +19,7 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 svg{display:block}
 
 /* ---------- stage ---------- */
-.stage{height:100dvh;display:flex;align-items:center;justify-content:center;gap:56px;padding:20px}
+.stage{height:100dvh;display:flex;align-items:center;justify-content:center;gap:92px;padding:20px}
 .side{width:230px}
 .side h1{font-size:22px;line-height:1.15;margin:0 0 18px;letter-spacing:-.02em}
 .side .fbtn{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:12px;font-size:15px;font-weight:500;margin-bottom:6px;background:#fff;border:1px solid #dfe2e6;transition:background .15s,border-color .15s}
@@ -176,32 +176,35 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
 .item .cta button.done{background:#d9fdd3;color:#15603e}
 
 /* ---------- status viewer ---------- */
-#viewer{background:#0b0b0b;color:#fff;z-index:40;padding-top:54px}
-#viewer.on{animation:vin .28s var(--ease)}
-@keyframes vin{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
-.prog{display:flex;gap:4px;padding:6px 8px 0}
+#viewer{background:#000;color:#fff;z-index:40;padding-top:0;perspective:1100px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+#viewer.on{animation:vin .26s var(--ease)}
+@keyframes vin{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
+.vpane{position:absolute;inset:0;display:flex;flex-direction:column;padding-top:46px;background:#0b0b0b;will-change:transform;backface-visibility:hidden}
+.vpane.anim{transition:transform .34s cubic-bezier(.3,.7,.2,1),opacity .34s}
+.prog{display:flex;gap:4px;padding:5px 8px 0}
 .prog i{flex:1;height:2.5px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden}
 .prog i::after{content:"";display:block;height:100%;width:0;background:#fff}
-.prog i.done::after{width:100%}
-.prog i.cur::after{animation:fill 18s linear forwards}
+.prog i.cur::after{animation:fill 15s linear forwards}
+.vpane.hold .prog i.cur::after{animation-play-state:paused}
 @keyframes fill{to{width:100%}}
-.vhdr{display:flex;align-items:center;gap:9px;padding:8px 12px 8px 4px}
+.vhdr{display:flex;align-items:center;gap:9px;height:46px;padding:0 14px 0 4px;flex:none}
 .vhdr .back{color:#fff}
 .vhdr .t{flex:1;min-width:0}
 .vhdr .t b{display:flex;gap:4px;align-items:center;font-size:16px;font-weight:600}
 .vhdr .t span{font-size:12.5px;opacity:.75}
-.vmedia{flex:1;min-height:0;display:grid;place-items:center;position:relative}
-.vmedia .flick{background:#151515}
-.vmedia .flick.tall{aspect-ratio:9/16;height:100%;width:auto;max-width:100%}
+.vmedia{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.vmedia .flick{background:#0b0b0b;flex:none}
+.vmedia .flick .fstate{background:#151515;background-image:linear-gradient(100deg,#151515 30%,#242424 50%,#151515 70%);background-size:200% 100%}
+.vmedia .flick.tall{aspect-ratio:auto;width:100%;flex:1;min-height:0}
 .vmedia .flick.wide{aspect-ratio:4/3}
-.vnav{position:absolute;bottom:-50px;width:34px;height:34px;border-radius:50%;background:rgba(30,30,30,.55);backdrop-filter:blur(8px);color:#fff;display:grid;place-items:center;z-index:5}
-.vnav.l{left:6px}.vnav.r{right:6px}
-.vnav[disabled]{display:none}
-.vcap{padding:10px 50px 0;text-align:center;font-size:15px;line-height:1.35;min-height:52px}
-.vcap b{font-weight:600}
-.vbot{display:flex;gap:10px;align-items:center;padding:8px 12px 34px}
+.vcap{padding:14px 26px 0;text-align:center;font-size:15.5px;line-height:1.35}
+.vbot{display:flex;gap:10px;align-items:center;padding:6px 12px 22px;flex:none}
 .vbot .rp{flex:1;height:40px;border-radius:20px;border:1px solid rgba(255,255,255,.45);display:flex;align-items:center;padding:0 16px;font-size:15.5px;color:rgba(255,255,255,.8)}
-.vbot .go{height:40px;padding:0 18px;border-radius:20px;background:#fff;color:#000;font-weight:600;font-size:15px}
+.vbot .hrt{width:40px;height:40px;display:grid;place-items:center;color:#fff}
+.deskarr{position:absolute;top:50%;margin-top:-22px;width:44px;height:44px;border-radius:50%;background:#fff;color:#111;display:none;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.14)}
+.deskarr.l{left:-62px}.deskarr.r{right:-62px}
+.phone.viewing .deskarr{display:grid}
+.deskarr[disabled]{opacity:.3;cursor:default}
 
 /* ---------- sheets / toast ---------- */
 .scrim{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .25s;z-index:70}
@@ -230,11 +233,12 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
   .app{border-radius:0}
   .island,.sbar,.homebar{display:none}
   .scr{padding-top:var(--sat)}
-  #viewer{padding-top:var(--sat)}
+  .vpane{padding-top:max(var(--sat),4px)}
+  .phone.viewing .deskarr{display:none}
   .tabbar{height:calc(58px + var(--sab))}
   .tabpad{height:calc(70px + var(--sab))}
   .inbar{padding-bottom:calc(7px + var(--sab))}
-  .vbot{padding-bottom:calc(12px + var(--sab))}
+  .vbot{padding-bottom:calc(10px + var(--sab))}
   .sheet{padding-bottom:calc(20px + var(--sab))}
   .fab{display:flex;position:absolute;right:12px;bottom:calc(70px + var(--sab));z-index:65;height:38px;padding:0 14px;border-radius:19px;background:#111;color:#fff;font-size:13.5px;font-weight:600;align-items:center;gap:6px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
   .fab.up{display:none}
@@ -250,7 +254,9 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
     <p>Concept demo by Flam. Not affiliated with or endorsed by WhatsApp, Meta or any brand shown.</p>
   </aside>
 
-  <div class="phone">
+  <div class="phone" id="phone">
+    <button class="deskarr l" id="arr-l" onclick="stepStatus(-1)" aria-label="Previous status"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2L2 8l6 6"/></svg></button>
+    <button class="deskarr r" id="arr-r" onclick="stepStatus(1)" aria-label="Next status"><svg width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l6 6-6 6"/></svg></button>
     <div class="app" id="app">
       <div class="island"></div>
       <div class="sbar" id="sbar"><span>9:41</span>
@@ -370,7 +376,7 @@ const I = {
 };
 
 /* ================= Flick runtime (same bridge as the other platform demos) ================= */
-function tagDoc(slotId, b, noCta){
+function tagDoc(slotId, b, noCta, gest){
   const bridge = `/* Phones with hardware AV1 fail to play some Flicks: hide AV1 so the player uses VP9, HEVC or H.264. */(function(){var av=function(s){return /av01|av1/i.test(String(s||''))};try{if(window.VideoDecoder&&VideoDecoder.isConfigSupported){var o=VideoDecoder.isConfigSupported.bind(VideoDecoder);VideoDecoder.isConfigSupported=function(q){return q&&av(q.codec)?Promise.resolve({supported:false,config:q}):o(q)}}}catch(e){}try{var mc=navigator.mediaCapabilities;if(mc&&mc.decodingInfo){var od=mc.decodingInfo.bind(mc);mc.decodingInfo=function(q){return q&&q.video&&av(q.video.contentType)?Promise.resolve({supported:false,smooth:false,powerEfficient:false}):od(q)}}}catch(e){}try{for(var i=sessionStorage.length-1;i>=0;i--){var k=sessionStorage.key(i);if(k&&k.indexOf('vrtx_cap_')===0)sessionStorage.removeItem(k)}}catch(e){}})();(function(){var S=${JSON.stringify(slotId)};function t(m){m.flam=1;m.slot=S;try{parent.postMessage(m,"*")}catch(e){}}
 window.__vxOpen=function(u){t({type:"cta",url:u||""});return true};
 window.ExitApi={exit:function(n,u){t({type:"cta",url:u||""})}};
@@ -387,6 +393,13 @@ window.addEventListener("error",function(e){var s=e.target;if(s&&s.tagName==="SC
   const fonts = b.fontScan ? `<script>(function(){var seen={},head=document.head||document.documentElement,until=Date.now()+3e4;function add(css){if(seen[css])return;seen[css]=1;var s=document.createElement("style");s.textContent=css;head.appendChild(s)}function scan(){try{var ps=document.getElementsByTagName("vertex-player");for(var i=0;i<ps.length;i++){var r=ps[i].shadowRoot;if(!r)continue;var n=r.querySelectorAll("style,link[rel=stylesheet]");for(var j=0;j<n.length;j++){var el=n[j];if(el.tagName==="LINK"){if(/fonts\\.googleapis\\.com/.test(el.href)&&!seen[el.href]){seen[el.href]=1;var l=document.createElement("link");l.rel="stylesheet";l.href=el.href;head.appendChild(l)}continue}var m=(el.textContent||"").match(/@font-face\\s*\\{[^}]*\\}/g);if(m)add(m.join(""))}}}catch(e){}if(Date.now()<until)setTimeout(scan,250)}scan()})();<\/script>` : "";
   /* Promotional messages and catalogs have their own buttons, so the Flick's built-in CTA is hidden there. */
   const hide = noCta ? `<script>(function(){var css="[data-vertex-trigger]{visibility:hidden!important;opacity:0!important;pointer-events:none!important}",until=Date.now()+6e4;function scan(){try{var ps=document.getElementsByTagName("vertex-player");for(var i=0;i<ps.length;i++){var r=ps[i].shadowRoot;if(r&&!r.querySelector("style[data-nocta]")){var st=document.createElement("style");st.setAttribute("data-nocta","");st.textContent=css;r.appendChild(st)}}}catch(e){}if(Date.now()<until)setTimeout(scan,150)}scan()})();<\/script>` : "";
+  /* Status: report drags from inside the Flick so the viewer can swipe between statuses; taps still reach the Flick. */
+  const swipe = gest ? `<style>html,body{touch-action:none;-webkit-user-select:none;user-select:none}</style><script>(function(){var S=${JSON.stringify(slotId)},sx=0,sy=0,on=false,mv=false,kill=false;function p(ph,dx,dy){try{parent.postMessage({flam:1,slot:S,type:"g",ph:ph,dx:dx,dy:dy},"*")}catch(e){}}
+addEventListener("pointerdown",function(e){if(e.isPrimary===false)return;on=true;mv=false;kill=false;sx=e.clientX;sy=e.clientY;p("s",0,0)},true);
+addEventListener("pointermove",function(e){if(!on)return;var dx=e.clientX-sx,dy=e.clientY-sy;if(!mv&&Math.abs(dx)+Math.abs(dy)<10)return;mv=true;kill=true;p("m",dx,dy)},true);
+function end(e){if(!on)return;on=false;p("e",mv?e.clientX-sx:0,mv?e.clientY-sy:0);setTimeout(function(){kill=false},60)}
+addEventListener("pointerup",end,true);addEventListener("pointercancel",end,true);document.documentElement.addEventListener("pointerleave",end);
+addEventListener("click",function(e){if(kill){e.stopImmediatePropagation();e.preventDefault();kill=false}},true);})();<\/script>` : "";
   const bg = b.bg || (b.dark ? "#151515" : "#efefef");
   return `<!doctype html>
 <meta charset=utf-8>
@@ -397,6 +410,7 @@ window.addEventListener("error",function(e){var s=e.target;if(s&&s.tagName==="SC
 ${cfg}
 ${fonts}
 ${hide}
+${swipe}
 <script src=${b.src}><\/script>`;
 }
 
@@ -405,8 +419,8 @@ const $ = id => document.getElementById(id);
 let toastT; function toast(t){ const el=$("toast"); el.textContent=t; el.classList.add("on"); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove("on"),2200); }
 
 let SLOTS = {}, seq = 0;
-function flick(id, brand, noCta){
-  SLOTS[id] = { brand, noCta:!!noCta, ready:false, error:false, lastCta:0, variant:0, timer:null, mounted:false };
+function flick(id, brand, noCta, gest){
+  SLOTS[id] = { brand, noCta:!!noCta, gest:!!gest, ready:false, error:false, lastCta:0, variant:0, timer:null, mounted:false };
   const b=BRANDS[brand];
   return `<div class="flick ${b.dark?"dark":""} ${b.ar||""}" data-slot="${id}"><div class="fstate"></div></div>`;
 }
@@ -422,7 +436,7 @@ let io=null;
 function observeFlicks(){
   if(io) io.disconnect();
   io = new IntersectionObserver(es=>es.forEach(en=>{ en.isIntersecting ? mount(en.target) : unmount(en.target); }), { rootMargin:"160px 0px 160px 0px" });
-  document.querySelectorAll(".scr.on .flick[data-slot]").forEach(h=>io.observe(h));
+  document.querySelectorAll(".scr.on:not(#viewer) .flick[data-slot]").forEach(h=>io.observe(h));
 }
 function mount(host){
   const id=host.dataset.slot, s=SLOTS[id]; if(!s || s.mounted) return;
@@ -432,8 +446,8 @@ function mount(host){
   /* Each Flick runs at its design size and is scaled to its slot, as in the AppLovin demo. */
   const [bw,bh]=baseOf(BRANDS[s.brand]);
   f.width=bw; f.height=bh; f.style.width=bw+"px"; f.style.height=bh+"px";
-  f.srcdoc=tagDoc(id, BRANDS[s.brand], s.noCta);
-  const fit=()=>{ const w=host.clientWidth,h=host.clientHeight; if(!w||!h) return; const sc=Math.min(w/bw,h/bh); f.style.transform=`translate(${(w-bw*sc)/2}px,${(h-bh*sc)/2}px) scale(${sc})`; };
+  f.srcdoc=tagDoc(id, BRANDS[s.brand], s.noCta, s.gest);
+  const fit=()=>{ const w=host.clientWidth,h=host.clientHeight; if(!w||!h) return; const sc=Math.min(w/bw,h/bh); s.sc=sc; f.style.transform=`translate(${(w-bw*sc)/2}px,${(h-bh*sc)/2}px) scale(${sc})`; };
   fit(); s.ro=new ResizeObserver(fit); s.ro.observe(host);
   host.prepend(f);
   s.timer=setTimeout(()=>{
@@ -458,13 +472,14 @@ window.addEventListener("message", e=>{
   if(!host || e.source!==host.querySelector("iframe")?.contentWindow) return;
   (window.__FL=window.__FL||[]).push(m.slot+":"+m.type);
   if(m.type==="ready"){ s.ready=true; clearTimeout(s.timer); host.classList.add("rdy"); host.querySelector(".fstate")?.classList.add("hide"); host.querySelector(".fwarn")?.remove(); }
+  else if(m.type==="g"){ gesture(m.ph, m.dx*(s.sc||1), m.dy*(s.sc||1)); return; }
   else if(m.type==="warn"){ console.warn("[flicks] player error", m.slot, m.msg); host.classList.add("rdy"); host.querySelector(".fstate")?.classList.add("hide"); }
   else if(m.type==="error"){
     s.error=true; clearTimeout(s.timer); console.error("[flicks] render error", m.slot, m.msg);
     const st=host.querySelector(".fstate"); st.className="fstate err";
     st.innerHTML=`<div><b>Flick failed to load</b>${esc(m.msg)}<br><br>If this file is open inside a preview window, open it directly in Chrome. Previews block ad scripts.</div>`;
   }
-  else if(m.type==="switch"){ const v=Math.max(0,Math.min(m.diff, BRANDS[s.brand].variants.length-1)); if(v!==s.variant){ s.variant=v; syncVariant(m.slot); } }
+  else if(m.type==="switch"){ const v=Math.max(0,Math.min(m.diff, BRANDS[s.brand].variants.length-1)); if(v!==s.variant){ s.variant=v; syncVariant(m.slot); if(s.gest && s.ready) restartBar(); } }
   else if(m.type==="cta"){ const now=Date.now(); if(now-s.lastCta<900) return; s.lastCta=now; openLink(s.brand, m.url || variantOf(m.slot).url || BRANDS[s.brand].url); }
 });
 
@@ -487,6 +502,7 @@ function show(id, anim){
   const isTab = id==="s-chats"||id==="s-updates"||id==="s-other";
   $("tabbar").classList.toggle("on", isTab);
   $("fab").classList.toggle("up", !isTab);
+  $("phone").classList.toggle("viewing", id==="viewer");
   const dark = id==="viewer"; $("sbar").classList.toggle("lt",dark); $("homebar").classList.toggle("lt",dark);
   requestAnimationFrame(observeFlicks);
   markFormat();
@@ -616,27 +632,88 @@ function renderUpdates(){
   </div>`;
 }
 function scFail(im){ const p=im.parentNode, b=document.createElement('b'); b.textContent=im.dataset.n; p.style.background=im.dataset.c; im.replaceWith(b); }
-let sIdx=0;
-function openStatus(i, first=true){
-  sIdx=i; const s=STATUS[i], b=BRANDS[s.b]; seen.add(s.b);
-  const el=$("viewer"); el.querySelectorAll(".flick[data-slot]").forEach(unmount); dropSlots(el);
-  const id="st"+(++seq);
-  el.innerHTML = `
-  <div class="prog"><i class="cur"></i></div>
+let sIdx=0, pane=null;
+function paneHTML(i){
+  const s=STATUS[i], b=BRANDS[s.b], id="st"+(++seq), tall=b.ar==="tall";
+  return `<div class="prog"><i class="cur"></i></div>
   <div class="vhdr"><button class="back" onclick="closeStatus()" aria-label="Back">${I.back}</button>${avatar(b,"s36")}<span class="t"><b>${esc(b.name)}${I.vf}</b><span>${s.ago}</span></span>${I.dots}</div>
-  <div class="vmedia">${flick(id,s.b)}
-    <button class="vnav l" ${i===0?"disabled":""} onclick="openStatus(${i-1},false)" aria-label="Previous status">${I.chev("l")}</button>
-    <button class="vnav r" onclick="${i===STATUS.length-1?"closeStatus()":`openStatus(${i+1},false)`}" aria-label="Next status">${I.chev("r")}</button>
-  </div>
-  <div class="vcap">${esc(s.cap)}<br><b data-vname="${id}">${esc(b.variants[0].n)}</b></div>
-  <div class="vbot"><span class="rp">Reply</span></div>`;
-  if(first || cur!=="viewer"){ tab="updates"; show("viewer"); } else requestAnimationFrame(observeFlicks);
+  <div class="vmedia">${flick(id,s.b,false,true)}${tall?"":`<div class="vcap">${esc(s.cap)}</div>`}</div>
+  <div class="vbot"><span class="rp">Reply</span><span class="hrt"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 20.500s-7.500-4.600-7.500-10.200A4.300 4.300 0 0 1 12 7.800a4.300 4.300 0 0 1 7.500 2.500c0 5.600-7.500 10.200-7.500 10.200z"/></svg></span></div>`;
 }
-function closeStatus(){ goTab("updates"); }
+function makePane(i){
+  const el=document.createElement("div"); el.className="vpane"; el.innerHTML=paneHTML(i);
+  el.querySelector(".prog i").addEventListener("animationend", ()=>{ if(el===pane && !drag) stepStatus(1); });
+  return el;
+}
+function killPane(el){ el.querySelectorAll(".flick[data-slot]").forEach(unmount); dropSlots(el); el.remove(); }
+function syncArrows(){ $("arr-l").disabled = sIdx===0; }
+function openStatus(i){
+  const v=$("viewer"); v.querySelectorAll(".vpane").forEach(killPane);
+  sIdx=i; seen.add(STATUS[i].b); pane=makePane(i); v.appendChild(pane); tab="updates";
+  show("viewer"); pane.querySelectorAll(".flick[data-slot]").forEach(mount); syncArrows();
+}
+const CUBE = (x,w) => `translateX(${x}px) rotateY(${(x/w)*42}deg)`;
+/* Move to the neighbouring brand's status with the cube turn; `from` is where the finger let go. */
+function stepStatus(dir, from=0){
+  if(cur!=="viewer" || !pane) return;
+  const n=sIdx+dir, v=$("viewer"), w=v.clientWidth;
+  if(n<0){ settle(); return; }
+  if(n>=STATUS.length){ closeStatus(); return; }
+  const old=pane; sIdx=n; seen.add(STATUS[n].b);
+  pane=makePane(n); pane.style.transformOrigin = dir>0 ? "left center" : "right center";
+  pane.style.transform=CUBE(dir*w + from, w); v.appendChild(pane);
+  pane.querySelectorAll(".flick[data-slot]").forEach(mount);
+  old.classList.remove("hold"); old.style.transformOrigin = dir>0 ? "right center" : "left center";
+  void pane.offsetWidth;
+  old.classList.add("anim"); pane.classList.add("anim");
+  old.style.transform=CUBE(-dir*w, w); pane.style.transform="none";
+  setTimeout(()=>{ killPane(old); if(pane) pane.classList.remove("anim"); }, 360);
+  syncArrows();
+}
+function settle(){ if(!pane) return; pane.classList.add("anim"); pane.style.transform="none"; pane.style.opacity=1; const p=pane; setTimeout(()=>p.classList.remove("anim"),360); }
+function restartBar(){ const b=pane&&pane.querySelector(".prog i"); if(!b) return; b.classList.remove("cur"); void b.offsetWidth; b.classList.add("cur"); }
+function closeStatus(){ const v=$("viewer"); goTab("updates"); v.querySelectorAll(".vpane").forEach(killPane); pane=null; }
+
+/* One gesture model for drags that start on the Flick (reported from its frame) and drags on the rest of the viewer. */
+let drag=null;
+function gesture(ph, dx, dy){
+  if(cur!=="viewer" || !pane) return;
+  const w=$("viewer").clientWidth;
+  if(ph==="s"){ drag={axis:null,t:Date.now()}; pane.classList.add("hold"); pane.classList.remove("anim"); return; }
+  if(!drag) return;
+  if(ph==="m"){
+    if(!drag.axis) drag.axis = Math.abs(dx)>=Math.abs(dy) ? "x" : "y";
+    if(drag.axis==="x"){
+      const edge = (dx>0 && sIdx===0); const x = edge ? dx*.3 : dx;
+      pane.style.transformOrigin = x<0 ? "right center" : "left center";
+      pane.style.transform = CUBE(x, w);
+    } else {
+      const y=Math.max(0,dy); pane.style.transformOrigin="center";
+      pane.style.transform=`translateY(${y}px) scale(${1-Math.min(y,400)/1600})`; pane.style.opacity=1-Math.min(y,400)/700;
+    }
+    return;
+  }
+  const d=drag; drag=null; pane.classList.remove("hold");
+  const fast = Date.now()-d.t < 280;
+  if(d.axis==="x" && (Math.abs(dx)>w*.28 || (fast && Math.abs(dx)>36))){ if(dx<0) stepStatus(1, dx); else if(sIdx>0) stepStatus(-1, dx); else settle(); }
+  else if(d.axis==="y" && (dy>120 || (fast && dy>50))) closeStatus();
+  else if(d.axis) settle();
+}
+(function(){
+  const v=$("viewer"); let sx=0, sy=0, on=false, mv=false, tgt=null;
+  v.addEventListener("pointerdown", e=>{ if(e.target.closest("button")) return; on=true; mv=false; sx=e.clientX; sy=e.clientY; tgt=e.target; try{ v.setPointerCapture(e.pointerId); }catch(_){} gesture("s",0,0); });
+  v.addEventListener("pointermove", e=>{ if(!on) return; const dx=e.clientX-sx, dy=e.clientY-sy; if(!mv && Math.abs(dx)+Math.abs(dy)<10) return; mv=true; gesture("m",dx,dy); });
+  const end=e=>{ if(!on) return; on=false; const held=drag && Date.now()-drag.t>350;
+    gesture("e", mv?e.clientX-sx:0, mv?e.clientY-sy:0);
+    /* A plain tap on the empty area steps back or forward, like the app. */
+    if(!mv && !held && e.type==="pointerup" && tgt && !tgt.closest(".vhdr,.vbot,.flick")){ const r=v.getBoundingClientRect(); stepStatus((e.clientX-r.left) < r.width*.3 ? -1 : 1); }
+  };
+  v.addEventListener("pointerup", end); v.addEventListener("pointercancel", end);
+})();
 document.addEventListener("keydown", e=>{
   if(cur!=="viewer") return;
-  if(e.key==="ArrowRight") sIdx<STATUS.length-1 ? openStatus(sIdx+1,false) : closeStatus();
-  if(e.key==="ArrowLeft" && sIdx>0) openStatus(sIdx-1,false);
+  if(e.key==="ArrowRight") stepStatus(1);
+  if(e.key==="ArrowLeft") stepStatus(-1);
   if(e.key==="Escape") closeStatus();
 });
 
