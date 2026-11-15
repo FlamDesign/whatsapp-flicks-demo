@@ -405,7 +405,8 @@ const BRANDS = {
     variants:[{n:"Cherry Garcia",img:IC("large_c272f189-7d9c-4c5d-ab83-48e12b1874dd.png")},{n:"Razz Up!"},{n:"Chunky Monkey",img:IC("large_1fca5e9d-fd60-48c2-a733-71a021963dc9.png")}] },
   bose:{ name:"Bose", av:"BOSE", avc:"#000", domain:"bose.com", url:"https://www.bose.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a9733389e74536944cd96bd_baspn2/ad.js",
-    variants:[{n:"Color 1"},{n:"Color 2"},{n:"Color 3"}] },
+    variants:[{n:"Color 1"},{n:"Color 2"},{n:"Color 3"}],
+    purl:"https://www.bestbuy.com/product/bose-quietcomfort-ultra-2nd-gen-true-wireless-noise-cancelling-in-ear-earbuds-black/6628900" },
   lego:{ name:"LEGO", av:"LEGO", avc:"#e3000b", lbg:"#e3000b", domain:"lego.com", url:"https://www.lego.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_u008vu/ad.js",
     variants:[{n:"Option 1"},{n:"Option 2"},{n:"Option 3"}] },
@@ -489,6 +490,7 @@ v.addEventListener("vertex-ready",function(){t({type:"ready"})});
 v.addEventListener("vertex-error",function(e){var d=e.detail||{};if(d.recovered||d.severity==="warning"||/WebGPU/.test(d.message||""))return;t({type:"warn",msg:(d.message||d.code||"render error")+""})});
 v.addEventListener("vertex-cta",function(e){var d=e.detail||{};t({type:"cta",url:d.url||""})});
 v.addEventListener("vertex-diff-change",function(e){var d=e.detail||{};t({type:"switch",diff:+d.diff||0})});}
+window.addEventListener("message",function(e){var d=e.data;if(!d||d.flamCmd!=="cta")return;try{var vp=document.querySelector("vertex-player"),r=vp&&vp.shadowRoot,els=r?r.querySelectorAll("[data-vertex-trigger]"):[];for(var i=0;i<els.length;i++){if(getComputedStyle(els[i]).display!=="none"){els[i].click();return}}}catch(x){}t({type:"nocta"})});
 new MutationObserver(function(){var v=document.querySelector("vertex-player");if(v)hook(v)}).observe(document.documentElement,{childList:true,subtree:true});
 window.addEventListener("error",function(e){var s=e.target;if(s&&s.tagName==="SCRIPT")t({type:"error",msg:"Could not load "+s.src})},true);})();`;
   const cfg = b.adConfig ? `<script>window.AD_CONFIG=window.AD_CONFIG||{};window.AD_CONFIG.dsp="dv360_studio";window.AD_CONFIG.publisherInfo={"publisher_id":"\${PUBLISHER_ID}","adsxt_publisher_id":"\${ADSXT_PUBLISHER_ID}","universal_site_id":"\${UNIVERSAL_SITE_ID}","source_url":"\${SOURCE_URL}","source_url_enc":"\${SOURCE_URL_ENC}","adsxt_ad_system_domain":"\${ADSXT_AD_SYSTEM_DOMAIN}"};window.AD_CONFIG.clickTracker={"mode":"exit","template":""};<\/script>` : "";
@@ -530,7 +532,17 @@ function flick(id, brand, noCta, gest, prev){
 }
 const baseOf = b => b.ar==="tall" ? [360,640] : b.ar==="wide" ? [560,420] : [540,540];
 function variantOf(id){ const s=SLOTS[id], b=BRANDS[s.brand]; return b.variants[s.variant] || b.variants[0]; }
-function shop(id){ const s=SLOTS[id]; if(!s) return; openLink(s.brand, variantOf(id).url || BRANDS[s.brand].url); }
+/* Links always come from the Flick tag first: the demo presses the tag's own CTA for the option on screen and
+   opens whatever URL the tag hands back. The URLs listed in BRANDS are only a fallback if the tag returns none. */
+function shop(id){
+  const s=SLOTS[id]; if(!s) return;
+  const f=document.querySelector(`.flick[data-slot="${id}"] iframe`);
+  const fallback=()=>{ if(!s.wantCta) return; s.wantCta=0; clearTimeout(s.ctaT); openLink(s.brand, variantOf(id).url || BRANDS[s.brand].purl || BRANDS[s.brand].url); };
+  s.wantCta=1; clearTimeout(s.ctaT); s.fallback=fallback;
+  if(!f || !s.ready){ fallback(); return; }
+  try{ f.contentWindow.postMessage({flamCmd:"cta"},"*"); }catch(e){ fallback(); return; }
+  s.ctaT=setTimeout(fallback, 900);
+}
 function syncVariant(id){
   const s=SLOTS[id]; if(!s) return;
   const n=variantOf(id).n;
@@ -585,7 +597,8 @@ window.addEventListener("message", e=>{
     st.innerHTML=`<div><b>Flick failed to load</b>${esc(m.msg)}<br><br>If this file is open inside a preview window, open it directly in Chrome. Previews block ad scripts.</div>`;
   }
   else if(m.type==="switch"){ const v=Math.max(0,Math.min(m.diff, BRANDS[s.brand].variants.length-1)); if(v!==s.variant){ s.variant=v; syncVariant(m.slot); if(s.gest && s.ready) restartBar(); } }
-  else if(m.type==="cta"){ const now=Date.now(); if(now-s.lastCta<900) return; s.lastCta=now; openLink(s.brand, m.url || variantOf(m.slot).url || BRANDS[s.brand].url); }
+  else if(m.type==="nocta"){ s.fallback&&s.fallback(); }
+  else if(m.type==="cta"){ s.wantCta=0; clearTimeout(s.ctaT); (window.__CTA=window.__CTA||[]).push(s.brand+" -> "+(m.url||"(none)")); const now=Date.now(); if(now-s.lastCta<900) return; s.lastCta=now; openLink(s.brand, m.url || variantOf(m.slot).url || BRANDS[s.brand].purl || BRANDS[s.brand].url); }
 });
 
 /* ================= shared bits ================= */
