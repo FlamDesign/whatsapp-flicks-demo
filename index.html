@@ -501,6 +501,7 @@ ${swipe}
 <script src=${b.src}><\/script>`;
 }
 
+Object.keys(BRANDS).forEach(k=>BRANDS[k].key=k);
 const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const $ = id => document.getElementById(id);
 let toastT; function toast(t){ const el=$("toast"); el.textContent=t; el.classList.add("on"); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove("on"),2200); }
@@ -575,8 +576,8 @@ function avatar(o, size){
   if(o.photo) return `<span class="av ${size}">${esc(o.name[0])}<img src="${U(o.photo)}" alt="" onerror="this.remove()"></span>`;
   const b = o.av ? o : BRANDS[o.biz||o];
   /* To show a brand's own logo, set `logo` on that brand to an image file or URL you have the right to use. */
-  if(b.logo) return `<span class="av ${size}" style="background:#fff"><img src="${esc(b.logo)}" alt="${esc(b.name)}" style="object-fit:contain"></span>`;
-  return `<span class="av ${size} ${b.av.length>2?"sm":""}" style="background:${b.avc}">${esc(b.av)}</span>`;
+  /* Looks for logos/<brand key>.png (or the brand's `logo` URL); shows the initials until a file is there. */
+  return `<span class="av ${size} ${b.av.length>2?"sm":""}" style="background:${b.avc}">${esc(b.av)}<img src="${esc(b.logo||("logos/"+b.key+".png"))}" alt="" style="object-fit:contain;background:#fff" onerror="this.remove()"></span>`;
 }
 const TABS = [["updates","Updates"],["calls","Calls"],["comm","Communities"],["chats","Chats"],["settings","Settings"]];
 let tab="chats", cur=null, cart=0;
