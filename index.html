@@ -406,7 +406,7 @@ const CHATS = [
   { id:"hike", name:"Weekend hikers", photo:"photo-1602333158618-dd71de539d3b", time:"8:15 AM", pv:"Jordan: Trailhead at 7, I'll bring coffee", snd:"Jordan", last:"Trailhead at 7, I'll bring coffee" },
   { id:"sony", biz:"sony", time:"Yesterday", unread:1, pv:"WH-CH720N noise canceling headphones. Tap a color in the video to switch." },
   { id:"fam", name:"Family", photo:"photo-1642335911245-238e13dcabf2", time:"Yesterday", pv:"Mom: Tree is up early this year", snd:"Mom", last:"Tree is up early this year" },
-  { id:"lego", biz:"lego", time:"Friday", pv:"Holiday builds are here. Tap a set in the video to switch." }
+  { id:"lego", biz:"lego", time:"Friday", pv:"Small brick, big possibilities. Tap a car in the video to switch." }
 ];
 /* Prices are illustrative. */
 const PRODUCTS = {
@@ -414,15 +414,15 @@ const PRODUCTS = {
   levis:{ price:108 },
   coach:{ price:450 },
   sony:{ title:"WH-CH720N headphones", price:149.99 },
-  lego:{ title:"LEGO holiday set", price:59.99 }
+  lego:{ title:"LEGO race car set", price:59.99 }
 };
 const SHOPS = {
   nike:{ title:"Black Friday", kind:"Sportswear", items:[
     { b:"nike", ds:"Switch the set in the video and see it move." }] },
   sony:{ title:"Headphones", kind:"Electronics", items:[
     { b:"sony", ds:"Light, all-day noise canceling. Tap a color in the video to switch." }] },
-  lego:{ title:"Holiday gifts", kind:"Toys", items:[
-    { b:"lego", ds:"Tap a set in the video to switch." }] },
+  lego:{ title:"Race cars", kind:"Toys", items:[
+    { b:"lego", ds:"Tap a car in the video to switch." }] },
   macys:{ title:"Holiday apparel", kind:"Department store", items:[
     { b:"levis", ds:"Three washes of the same overall. Tap a look in the video to switch." },
     { b:"coach", ds:"Three bags, one outfit. Tap a bag in the video to switch." },
@@ -677,7 +677,7 @@ function renderChats(){
 /* ================= Chat ================= */
 let openChatId=null;
 const meta = (t,mine) => `<span class="meta">${t}${mine?I.ticks:""}</span>`;
-const now = () => new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+const now = () => new Date().toLocaleTimeString("en-US", {hour:"numeric",minute:"2-digit"});
 const usd = n => "$"+n.toFixed(2);
 const CARTS = { nike:[], macys:[], sony:[], lego:[] }, EXTRA = { }, ORDERS = { };
 const cartCount = c => (CARTS[c]||[]).reduce((a,i)=>a+i.qty,0);
@@ -728,7 +728,7 @@ function chatBody(c){
     <div class="sys day">${c.time}</div>
     <div class="b tpl first">
       ${flick(id,c.id,true)}
-      <div class="tx"><b>${sony?"WH-CH720N noise canceling headphones":"Holiday builds are here."}</b><br>${sony?"Tap a color in the video to switch, then add yours to the cart.":"Tap a set in the video to switch, then add your pick to the cart."}<div class="pr">${usd(PRODUCTS[c.id].price)}</div>${meta(sony?"6:40 PM":"10:05 AM")}</div>
+      <div class="tx"><b>${sony?"WH-CH720N noise canceling headphones":"Small brick, big possibilities."}</b><br>${sony?"Tap a color in the video to switch, then add yours to the cart.":"Tap a car in the video to switch, then add your pick to the cart."}<div class="pr">${usd(PRODUCTS[c.id].price)}</div>${meta(sony?"6:40 PM":"10:05 AM")}</div>
       ${msgBtns(c.id,id,`<button onclick="openCatalog('${c.id}')">${SHOP_SM}View catalog</button>`)}
     </div>`;
   } else {
