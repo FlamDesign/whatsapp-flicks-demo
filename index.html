@@ -311,7 +311,7 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
   .vbot{padding-bottom:calc(10px + var(--sab))}
   .sheet{padding-bottom:calc(20px + var(--sab))}
   .cartbar{bottom:calc(14px + var(--sab))}
-  .fab{display:flex;position:absolute;right:12px;bottom:calc(70px + var(--sab));z-index:65;height:38px;padding:0 14px;border-radius:19px;background:#111;color:#fff;font-size:13.5px;font-weight:600;align-items:center;gap:6px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+  .fab{display:flex;position:absolute;right:12px;bottom:calc(70px + var(--sab));z-index:65;height:42px;padding:0 18px;border-radius:21px;background:#0b0b0b;color:#fff;font-size:15px;font-weight:700;align-items:center;gap:9px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
   .fab.up{display:none}
   .b.tpl{width:86%}
 }
@@ -346,7 +346,7 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
       <section class="scr" id="viewer"></section>
 
       <nav class="tabbar" id="tabbar"></nav>
-      <button class="fab" id="fab" onclick="openFormats()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Flicks formats</button>
+      <button class="fab" id="fab" onclick="openFormats()">Explore Flicks<svg width="13" height="9" viewBox="0 0 16 10" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l6 6 6-6"/></svg></button>
       <div class="toast" id="toast" role="status"></div>
       <div class="scrim" id="scrim" onclick="closeSheet()"></div>
       <div class="sheet" id="sheet" role="dialog"></div>
@@ -980,7 +980,7 @@ function openLink(brand, url){
   $("toast").classList.remove("on"); $("sheet").classList.add("on"); $("scrim").classList.add("on");
 }
 function openFormats(){
-  $("sheet").innerHTML = `<div class="grab"></div><h3>Flicks formats</h3>${FORMATS.map(([k,l])=>`<button class="fbtn" onclick="closeSheet();jump('${k}')">${l}</button>`).join("")}
+  $("sheet").innerHTML = `<div class="grab"></div><h3>Explore Flicks</h3>${FORMATS.map(([k,l])=>`<button class="fbtn" onclick="closeSheet();jump('${k}')">${l}</button>`).join("")}
     <small>Concept demo by Flam. Not affiliated with or endorsed by WhatsApp, Meta or any brand shown.</small>`;
   $("toast").classList.remove("on"); $("sheet").classList.add("on"); $("scrim").classList.add("on");
 }
