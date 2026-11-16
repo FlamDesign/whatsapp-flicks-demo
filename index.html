@@ -402,7 +402,7 @@ const CAD = id => `https://storage.googleapis.com/bucket-fi-production-apps-0672
 const BRANDS = {
   nike:{ name:"Nike", av:"N", avc:"#111", lbg:"#000", domain:"nike.com", url:"https://www.nike.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a97885c9e74536944d35d53_dsefds/ad.js",
-    variants:[{n:"Look 1"},{n:"Look 2"},{n:"Look 3"}] },
+    variants:[{n:"Black"},{n:"Coral"},{n:"Lilac"}] },
   levis:{ name:"Levi's", av:"L", avc:"#c41230", domain:"levi.com", url:"https://www.levi.com/US/en_US/",
     src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_z64116/ad.js",
     variants:[{n:"Baggy Overalls",url:"https://www.levi.com/US/en_US/clothing/women/overalls-jumpsuits/baggy-overalls/p/000UG0004"},
@@ -430,11 +430,11 @@ const BRANDS = {
     variants:[{n:"Cherry Garcia",img:IC("large_c272f189-7d9c-4c5d-ab83-48e12b1874dd.png")},{n:"Razz Up!"},{n:"Chunky Monkey",img:IC("large_1fca5e9d-fd60-48c2-a733-71a021963dc9.png")}] },
   bose:{ name:"Bose", av:"BOSE", avc:"#000", domain:"bose.com", url:"https://www.bose.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a9733389e74536944cd96bd_baspn2/ad.js",
-    variants:[{n:"Color 1"},{n:"Color 2"},{n:"Color 3"}],
+    variants:[{n:"Black"},{n:"Plum"},{n:"Blue"}],
     purl:"https://www.bestbuy.com/product/bose-quietcomfort-ultra-2nd-gen-true-wireless-noise-cancelling-in-ear-earbuds-black/6628900" },
   lego:{ name:"LEGO", av:"LEGO", avc:"#e3000b", lbg:"#e3000b", domain:"lego.com", url:"https://www.lego.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_u008vu/ad.js",
-    variants:[{n:"Option 1"},{n:"Option 2"},{n:"Option 3"}] },
+    variants:[{},{},{}] },
   macys:{ name:"Macy's", av:"M", avc:"#b3121d", domain:"macys.com", url:"https://www.macys.com/" }
 };
 
@@ -571,7 +571,7 @@ function shop(id){
 }
 function syncVariant(id){
   const s=SLOTS[id]; if(!s) return;
-  const n=variantOf(id).n;
+  const n=variantOf(id).n||"";
   if(PDP && id===PDP.slot && cur==="s-pdp") renderPbar();
   document.querySelectorAll(`[data-vname="${id}"]`).forEach(el=>{ if(el.textContent===n) return; el.style.opacity=0; setTimeout(()=>{ el.textContent=n; el.style.opacity=1; },150); });
 }
@@ -850,7 +850,7 @@ function testDrive(slot){
 }
 
 /* ================= Cart, order and payment ================= */
-function itemName(slot){ const s=SLOTS[slot], p=PRODUCTS[s.brand], v=variantOf(slot).n; return p.title ? `${p.title}, ${v}` : v; }
+function itemName(slot){ const s=SLOTS[slot]; return prodName(s.brand, s.variant); }
 function addToCart(chat, slot, btn){
   const s=SLOTS[slot]; if(!s) return;
   const name=itemName(slot), key=s.brand+"|"+name, cart=CARTS[chat];
@@ -927,7 +927,7 @@ function pay(id){
    The route WhatsApp uses: a product message has one "View" button, which opens the product page inside the app.
    Adding to the cart happens here, then the cart is sent to the business as a message. */
 let PDP=null;
-function prodName(brand, vi){ const p=PRODUCTS[brand], v=(BRANDS[brand].variants[vi]||BRANDS[brand].variants[0]).n; return p.title ? `${p.title}, ${v}` : v; }
+function prodName(brand, vi){ const p=PRODUCTS[brand], v=(BRANDS[brand].variants[vi]||BRANDS[brand].variants[0]).n; return p.title ? (v ? `${p.title} in ${v}` : p.title) : v; }
 function openPdp(chat, brand, from, vi=0, anim="push"){
   const b=BRANDS[brand], p=PRODUCTS[brand], biz=BRANDS[CHATS.find(c=>c.id===chat).biz];
   const item=(SHOPS[chat]?.items||[]).find(i=>i.b===brand)||{};
@@ -989,7 +989,7 @@ function openCatalog(chat="macys", anim="push"){
   <button class="cartbar ${n?"on":""}" data-cartbar="${chat}" onclick="openCart('${chat}')"><span>View cart</span><em>${n} item${n===1?"":"s"} · ${usd(cartTotal(chat))}</em></button>`;
   show("s-catalog", anim);
 }
-function askAbout(id){ const s=SLOTS[id], name=BRANDS[s.brand].name+" "+variantOf(id).n; openChat(PDP?PDP.chat:catChat,"pop"); const i=$("msg"); i.value=`Is the ${name} available in my size?`; $("inbar").classList.add("typing"); i.focus({preventScroll:true}); }
+function askAbout(id){ const s=SLOTS[id], pn=prodName(s.brand,s.variant), name=pn.startsWith(BRANDS[s.brand].name)?pn:BRANDS[s.brand].name+" "+pn; openChat(PDP?PDP.chat:catChat,"pop"); const i=$("msg"); i.value=`Is the ${name} available in my size?`; $("inbar").classList.add("typing"); i.focus({preventScroll:true}); }
 
 /* ================= Updates + Status ================= */
 const seen = new Set();
@@ -1154,7 +1154,7 @@ function jump(k){
 /* ================= freshness =================
    Phones and in-app browsers hold on to an old copy of this page. On load, ask the server which build is current
    and reload once onto it if this copy is older. */
-const BUILD="1794786974";
+const BUILD="1794787189";
 fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ t=t.trim();
   if(t && t!==BUILD && !new URLSearchParams(location.search).get("v")?.includes(t)) location.replace(location.pathname+"?v="+t); }).catch(()=>{});
 
