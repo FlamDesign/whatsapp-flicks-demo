@@ -432,7 +432,7 @@ const BRANDS = {
     src:"https://native-ads-dev.appless.workers.dev/6a9733389e74536944cd96bd_baspn2/ad.js",
     variants:[{n:"Black"},{n:"Plum"},{n:"Blue"}],
     purl:"https://www.bestbuy.com/product/bose-quietcomfort-ultra-2nd-gen-true-wireless-noise-cancelling-in-ear-earbuds-black/6628900" },
-  lego:{ name:"LEGO", av:"LEGO", avc:"#e3000b", lbg:"#e3000b", domain:"lego.com", url:"https://www.lego.com/",
+  lego:{ name:"LEGO", av:"LEGO", avc:"#e3000b", lbg:"#e3000b", domain:"lego.com", url:"https://www.lego.com/en-us",
     src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_u008vu/ad.js",
     variants:[{},{},{}] },
   macys:{ name:"Macy's", av:"M", avc:"#b3121d", domain:"macys.com", url:"https://www.macys.com/" }
@@ -1154,7 +1154,7 @@ function jump(k){
 /* ================= freshness =================
    Phones and in-app browsers hold on to an old copy of this page. On load, ask the server which build is current
    and reload once onto it if this copy is older. */
-const BUILD="1794787189";
+const BUILD="1794787246";
 fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ t=t.trim();
   if(t && t!==BUILD && !new URLSearchParams(location.search).get("v")?.includes(t)) location.replace(location.pathname+"?v="+t); }).catch(()=>{});
 
