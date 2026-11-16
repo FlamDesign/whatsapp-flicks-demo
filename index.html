@@ -402,7 +402,8 @@ const CAD = id => `https://storage.googleapis.com/bucket-fi-production-apps-0672
 const BRANDS = {
   nike:{ name:"Nike", av:"N", avc:"#111", lbg:"#000", domain:"nike.com", url:"https://www.nike.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a97885c9e74536944d35d53_dsefds/ad.js",
-    variants:[{n:"Black"},{n:"Coral"},{n:"Lilac"}] },
+    variants:[{n:"Black"},{n:"Coral"},{n:"Lilac"}],
+    purl:"https://www.nike.com/w/womens-universa-clothing-5e1x6z6ymx6z9sh3f" },
   levis:{ name:"Levi's", av:"L", avc:"#c41230", domain:"levi.com", url:"https://www.levi.com/US/en_US/",
     src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_z64116/ad.js",
     variants:[{n:"Baggy Overalls",url:"https://www.levi.com/US/en_US/clothing/women/overalls-jumpsuits/baggy-overalls/p/000UG0004"},
@@ -421,13 +422,13 @@ const BRANDS = {
     variants:[{n:"Predator Helios Neo 16 AI",url:"https://store.acer.com/en-us/predator-helios-neo-16-ai-gaming-laptop-phn16-73-97fv"},{n:"Chromebook 314",url:"https://store.acer.com/en-us/acer-chromebook-314-cboa314-2h-8878"},{n:"Nitro V 16 AI",url:"https://store.acer.com/en-us/nitro-v-16-ai-gaming-laptop-anv16-61-r2qy"}] },
   cad:{ name:"Cadillac", av:"CAD", avc:"#1a1a1a", domain:"cadillac.com", url:"https://www.cadillac.com/", adConfig:true, dark:true,
     src:"https://flicks.flamapp.live/z70k1k/ad.js",
-    variants:[{n:"Optiq",img:CAD("wab2wtdhjqvp93u3awoo9729")},{n:"Celestiq",img:CAD("rivsbyktpswgcbta3xoih3rb")},{n:"Escalade-V",img:CAD("iwiak68bxr6ga8ysyjz7i81p")}] },
+    variants:[{n:"Optiq",img:CAD("wab2wtdhjqvp93u3awoo9729"),url:"https://www.cadillac.com/electric/optiq"},{n:"Celestiq",img:CAD("rivsbyktpswgcbta3xoih3rb"),url:"https://www.cadillac.com/electric/celestiq"},{n:"Escalade-V",img:CAD("iwiak68bxr6ga8ysyjz7i81p"),url:"https://www.cadillac.com/suvs/escalade/v-series"}] },
   airbnb:{ name:"Airbnb", av:"A", avc:"#ff385c", domain:"airbnb.com", url:"https://www.airbnb.com/", fontScan:true, ar:"wide",
     src:"https://native-ads.appless.workers.dev/6aa2aef14954ac6f0d9dcd05_ddladj/ad.js",
     variants:[{n:"A stunning view"},{n:"Close to the beach"},{n:"Space to play"}] },
   bj:{ name:"Ben & Jerry's", av:"B&J", avc:"#2a6fb7", domain:"benjerry.com", url:"https://www.benjerry.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_z1fp1a/ad.js",
-    variants:[{n:"Cherry Garcia",img:IC("large_c272f189-7d9c-4c5d-ab83-48e12b1874dd.png")},{n:"Razz Up!"},{n:"Chunky Monkey",img:IC("large_1fca5e9d-fd60-48c2-a733-71a021963dc9.png")}] },
+    variants:[{n:"Cherry Garcia",img:IC("large_c272f189-7d9c-4c5d-ab83-48e12b1874dd.png"),url:"https://www.benjerry.com/flavors/cherry-garcia-ice-cream"},{n:"Razz Up!",url:"https://www.benjerry.com/flavors/razz-up-ice-cream"},{n:"Chunky Monkey",img:IC("large_1fca5e9d-fd60-48c2-a733-71a021963dc9.png"),url:"https://www.benjerry.com/flavors/chunky-monkey-ice-cream"}] },
   bose:{ name:"Bose", av:"BOSE", avc:"#000", domain:"bose.com", url:"https://www.bose.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a9733389e74536944cd96bd_baspn2/ad.js",
     variants:[{n:"Black"},{n:"Plum"},{n:"Blue"}],
@@ -1154,7 +1155,7 @@ function jump(k){
 /* ================= freshness =================
    Phones and in-app browsers hold on to an old copy of this page. On load, ask the server which build is current
    and reload once onto it if this copy is older. */
-const BUILD="1794787246";
+const BUILD="1794787412";
 fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ t=t.trim();
   if(t && t!==BUILD && !new URLSearchParams(location.search).get("v")?.includes(t)) location.replace(location.pathname+"?v="+t); }).catch(()=>{});
 
