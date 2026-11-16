@@ -1153,11 +1153,24 @@ function jump(k){
 }
 
 /* ================= freshness =================
-   Phones and in-app browsers hold on to an old copy of this page. On load, ask the server which build is current
-   and reload once onto it if this copy is older. */
-const BUILD="1794787412";
-fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"").then(t=>{ t=t.trim();
-  if(t && t!==BUILD && !new URLSearchParams(location.search).get("v")?.includes(t)) location.replace(location.pathname+"?v="+t); }).catch(()=>{});
+   The shared link must always show the newest build. Each time the page opens, or comes back into view, it fetches
+   itself fresh from the server and checks that this copy's own code and styles are still in it. If not, this copy
+   is stale and the page reloads once onto the current build. Nothing to update by hand when the demo changes. */
+const SELF=[document.currentScript.textContent, document.querySelector("style").textContent];
+let lastFresh=0;
+async function freshCheck(){
+  if(location.protocol==="file:" || Date.now()-lastFresh<15000) return; lastFresh=Date.now();
+  try{
+    const t=await fetch(location.pathname+"?fresh="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.text():"");
+    if(!t.includes("<title>Flicks on WhatsApp") || SELF.every(x=>t.includes(x))) return;
+    let h=5381; for(let i=0;i<t.length;i++) h=((h<<5)+h+t.charCodeAt(i))|0; const v=(h>>>0).toString(36);
+    if(new URLSearchParams(location.search).get("v")===v) return;
+    location.replace(location.pathname+"?v="+v);
+  }catch(e){}
+}
+freshCheck();
+addEventListener("pageshow", e=>{ if(e.persisted) freshCheck(); });
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) freshCheck(); });
 
 /* ================= boot ================= */
 $("side-formats").innerHTML = FORMATS.map(([k,l])=>`<button class="fbtn" data-k="${k}" onclick="jump('${k}')">${l}</button>`).join("");
