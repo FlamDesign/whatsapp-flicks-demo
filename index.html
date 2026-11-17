@@ -224,6 +224,10 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
 .pinf p{font-size:15.500px;line-height:1.4;color:#3b4a54;margin:0 0 12px}
 .plink{display:flex;align-items:center;gap:7px;color:var(--green-d);font-size:15.500px;font-weight:500;padding:10px 0;border-top:.5px solid #e2e2e2;width:100%;text-align:left}
 .pbar{position:absolute;left:0;right:0;bottom:0;display:flex;gap:10px;align-items:center;padding:10px 14px 30px;background:rgba(255,255,255,.96);border-top:.5px solid #dcdcdc;z-index:4}
+.pbar{flex-wrap:wrap}
+.psel{display:flex;align-items:center;gap:12px;width:100%;padding-bottom:2px}
+.psel .cn{flex:1;min-width:0}.psel .cn b{display:block;font-size:15.500px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.psel .cn span{font-size:13.500px;color:var(--sub)}
+.vth{width:44px;height:44px;border-radius:9px;overflow:hidden;flex:none;background:#f0f2f3;border:.5px solid #e2e2e2}.vth img{width:100%;height:100%;object-fit:cover;display:block}
 .pb{flex:1;height:46px;border-radius:23px;font-size:16px;font-weight:600;background:#eef8f1;color:var(--green-d)}
 .pb.p{background:var(--green);color:#fff}
 .qty.big{height:46px;border-radius:23px;padding:0 6px;flex:1;justify-content:space-between}
@@ -437,11 +441,16 @@ const BRANDS = {
     variants:[{n:"Cherry Garcia",img:IC("large_c272f189-7d9c-4c5d-ab83-48e12b1874dd.png"),url:"https://www.benjerry.com/flavors/cherry-garcia-ice-cream"},{n:"Razz Up!",url:"https://www.benjerry.com/flavors/razz-up-ice-cream"},{n:"Chunky Monkey",img:IC("large_1fca5e9d-fd60-48c2-a733-71a021963dc9.png"),url:"https://www.benjerry.com/flavors/chunky-monkey-ice-cream"}] },
   bose:{ name:"Bose", av:"BOSE", avc:"#000", domain:"bose.com", url:"https://www.bose.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a9733389e74536944cd96bd_baspn2/ad.js",
-    variants:[{n:"Black"},{n:"Plum"},{n:"Blue"}],
-    purl:"https://www.bestbuy.com/product/bose-quietcomfort-ultra-2nd-gen-true-wireless-noise-cancelling-in-ear-earbuds-black/6628900" },
+    own:true,
+    variants:[{n:"Black",url:"https://www.bose.com/p/earbuds/bose-quietcomfort-ultra-earbuds-2nd-gen/QCUE2-HEADPHONEIN-BLK-WW.html"},
+      {n:"Midnight Violet",url:"https://www.bose.com/p/new-arrivals-new-earbuds/bose-quietcomfort-ultra-earbuds-2nd-gen/QCUE2-HEADPHONEIN-MDVIO-WW.html"},
+      {n:"Deep Plum",url:"https://www.bose.com/p/earbuds/quietcomfort-ultra-earbuds-2nd-gen/QCUE2-HEADPHONEIN.html"}] },
   lego:{ name:"LEGO", av:"LEGO", avc:"#e3000b", lbg:"#e3000b", domain:"lego.com", url:"https://www.lego.com/en-us",
     src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_u008vu/ad.js",
-    variants:[{},{},{}] },
+    own:true,
+    variants:[{n:"Ferrari SF-24 F1 Race Car",url:"https://www.lego.com/en-us/product/ferrari-sf-24-f1-race-car-77242"},
+      {n:"McLaren F1 Team MCL38 Race Car",url:"https://www.lego.com/en-us/product/mclaren-f1-team-mcl38-race-car-77251"},
+      {n:"Mercedes-AMG F1 W15 Race Car",url:"https://www.lego.com/en-us/product/mercedes-amg-f1-w15-race-car-77244"}] },
   macys:{ name:"Macy's", av:"M", avc:"#b3121d", domain:"macys.com", url:"https://www.macys.com/" }
 };
 
@@ -462,7 +471,7 @@ const PRODUCTS = {
   levis:{ price:108 },
   coach:{ price:450 },
   bose:{ title:"QuietComfort Ultra Earbuds", price:299 },
-  lego:{ title:"LEGO race car set", price:59.99 }
+  lego:{ price:26.99 }
 };
 const SHOPS = {
   nike:{ title:"Black Friday", kind:"Sportswear", items:[
@@ -624,6 +633,7 @@ window.addEventListener("message", e=>{
   if(!host || e.source!==host.querySelector("iframe")?.contentWindow) return;
   (window.__FL=window.__FL||[]).push(m.slot+":"+m.type);
   if(m.type==="ready" && PDP && m.slot===PDP.slot && PDP.want>0){ const w=PDP.want; PDP.want=0; try{ host.querySelector("iframe").contentWindow.postMessage({flamCmd:"diff",i:w},"*"); }catch(_){} }
+  if(m.type==="ready" && PDP && m.slot===PDP.slot) setTimeout(renderPbar, 300);
   if(m.type==="ready"){ s.ready=true; clearTimeout(s.timer); host.classList.add("rdy"); host.querySelector(".fstate")?.classList.add("hide"); host.querySelector(".fwarn")?.remove(); }
   else if(m.type==="g"){ gesture(m.ph, m.dx*(s.sc||1), m.dy*(s.sc||1)); return; }
   else if(m.type==="warn"){ console.warn("[flicks] player error", m.slot, m.msg); host.classList.add("rdy"); host.querySelector(".fstate")?.classList.add("hide"); }
@@ -776,7 +786,7 @@ const cartTotal = c => (CARTS[c]||[]).reduce((a,i)=>a+i.qty*i.price,0);
 const SHOP_SM = I.shop.replace('width="22" height="22"','width="17" height="17"');
 const CART_SM = I.cart.replace('width="23" height="23"','width="17" height="17"');
 /* Buttons under a Flick message: the cart is filled from the message itself. */
-function msgBtns(chat, slot, brand, shopNow){
+function msgBtns(chat, slot, brand, shopNow=true){
   return `<div class="btns"><button onclick="openPdp('${chat}','${brand}','chat',SLOTS['${slot}']?SLOTS['${slot}'].variant:0)">View</button>${shopNow?`<button onclick="shop('${slot}')">${I.link}Shop now</button>`:""}</div>`;
 }
 function chatBody(c){
@@ -862,12 +872,22 @@ function testDrive(slot){
 }
 
 /* ================= Cart, order and payment ================= */
+function variantThumb(slot){
+  const s=SLOTS[slot]; if(!s) return "";
+  try{
+    const r=document.querySelector(`.flick[data-slot="${slot}"] iframe`).contentDocument.querySelector("vertex-player").shadowRoot;
+    const im=r.querySelector(`button[data-vertex-diff="${s.variant}"] img`) || r.querySelectorAll("button[data-vertex-diff] img")[s.variant];
+    if(im && (im.currentSrc||im.src)) return im.currentSrc||im.src;
+  }catch(e){}
+  return (BRANDS[s.brand].variants[s.variant]||{}).img || "";
+}
+const thumb = (src,brand) => src ? `<span class="vth"><img src="${esc(src)}" alt=""></span>` : avatar(BRANDS[brand],"s40");
 function itemName(slot){ const s=SLOTS[slot]; return prodName(s.brand, s.variant); }
 function addToCart(chat, slot, btn){
   const s=SLOTS[slot]; if(!s) return;
   const name=itemName(slot), key=s.brand+"|"+name, cart=CARTS[chat];
   const hit=cart.find(i=>i.key===key);
-  if(hit) hit.qty++; else cart.push({ key, brand:s.brand, name, price:PRODUCTS[s.brand].price, qty:1 });
+  if(hit) hit.qty++; else cart.push({ key, brand:s.brand, name, img:variantThumb(slot), price:PRODUCTS[s.brand].price, qty:1 });
   if(btn){ const l=btn.querySelector("span")||btn, t=l.textContent; l.textContent="Added"; btn.classList.add("ok"); setTimeout(()=>{ l.textContent=t; btn.classList.remove("ok"); },1200); }
   toast(`${name} added to cart`); syncCart(chat);
 }
@@ -879,7 +899,7 @@ function syncCart(chat){
   document.querySelectorAll(`[data-cartbadge="${chat}"]`).forEach(e=>{ e.textContent=n||""; e.classList.toggle("on",!!n); });
   document.querySelectorAll(`[data-cartbar="${chat}"]`).forEach(e=>{ e.classList.toggle("on",!!n); const t=e.querySelector("em"); if(t) t.textContent=`${n} item${n===1?"":"s"} · ${usd(cartTotal(chat))}`; });
 }
-const lineRow = (i,ctl) => `<div class="crow">${avatar(BRANDS[i.brand],"s40")}<span class="cn"><b>${esc(i.name)}</b><span>${esc(BRANDS[i.brand].name)} · ${usd(i.price)}</span></span>${ctl}</div>`;
+const lineRow = (i,ctl) => `<div class="crow">${thumb(i.img,i.brand)}<span class="cn"><b>${esc(i.name)}</b><span>${esc(BRANDS[i.brand].name)} · ${usd(i.price)}</span></span>${ctl}</div>`;
 function openCart(chat){
   const cart=CARTS[chat], b=BRANDS[CHATS.find(c=>c.id===chat).biz];
   if(!cart.length){ closeSheet(); toast("Your cart is empty"); return; }
@@ -955,7 +975,7 @@ function openPdp(chat, brand, from, vi=0, anim="push"){
       <p>${esc(item.ds||"")}</p>
       <button class="plink" onclick="shop('${PDP.slot}')">${I.link}<span>View product at ${esc(b.domain)}</span></button>
     </div>
-    <div style="height:110px"></div>
+    <div style="height:170px"></div>
   </div>
   <div class="pbar" id="pbar"></div>`;
   show("s-pdp", anim); renderPbar();
@@ -965,13 +985,15 @@ function renderPbar(){
   if(!PDP || !$("pbar")) return;
   const it=pdpItem(), hit=CARTS[PDP.chat].find(i=>i.key===it.key), pn=document.querySelector("[data-pname]");
   if(pn && pn.textContent!==it.name) pn.textContent=it.name;
-  $("pbar").innerHTML = hit
+  const sl=SLOTS[PDP.slot], vn=(BRANDS[PDP.brand].variants[sl?sl.variant:0]||{}).n || it.name, th=variantThumb(PDP.slot);
+  if(hit && th && !hit.img) hit.img=th;
+  $("pbar").innerHTML = `<div class="psel">${thumb(th,PDP.brand)}<span class="cn"><b>${esc(vn)}</b><span>${hit?`In your cart · ${hit.qty}`:"Selected"} · ${usd(PRODUCTS[PDP.brand].price)}</span></span></div>` + (hit
     ? `<span class="qty big"><button onclick="pdpQty(-1)" aria-label="Less">−</button><b>${hit.qty}</b><button onclick="pdpQty(1)" aria-label="More">+</button></span><button class="pb p" onclick="openCart('${PDP.chat}')">View cart</button>`
-    : `<button class="pb" onclick="askAbout('${PDP.slot}')">Message business</button><button class="pb p" onclick="pdpQty(1)">Add to cart</button>`;
+    : `<button class="pb" onclick="askAbout('${PDP.slot}')">Message business</button><button class="pb p" onclick="pdpQty(1)">Add to cart</button>`);
 }
 function pdpQty(d){
   const it=pdpItem(), cart=CARTS[PDP.chat], k=cart.findIndex(i=>i.key===it.key);
-  if(k<0){ if(d>0) cart.push({ key:it.key, brand:PDP.brand, name:it.name, price:PRODUCTS[PDP.brand].price, qty:1 }); }
+  if(k<0){ if(d>0) cart.push({ key:it.key, brand:PDP.brand, name:it.name, img:variantThumb(PDP.slot), price:PRODUCTS[PDP.brand].price, qty:1 }); }
   else { cart[k].qty+=d; if(cart[k].qty<=0) cart.splice(k,1); }
   syncCart(PDP.chat); renderPbar();
 }
