@@ -233,7 +233,7 @@ span.av{display:grid!important;color:#fff!important}.av.s52{font-size:17px!impor
 .addmore{display:block;color:var(--green-d);font-size:15.500px;font-weight:600;padding:14px 0 2px}
 .csend{display:flex;gap:10px;align-items:center;margin-top:12px}
 .csend .f{flex:1;height:42px;border-radius:21px;background:#f0f2f5;display:flex;align-items:center;padding:0 16px;color:#8a8a8e;font-size:16px}
-.csend button{width:44px;height:44px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;flex:none}
+.sheet .go.sendcart{display:flex;align-items:center;justify-content:center;gap:9px;height:52px;border-radius:26px;font-size:17px;margin-top:12px}
 
 /* ---------- cart, order, payment ---------- */
 .cart.hc{padding:0;margin-right:-4px}
@@ -883,8 +883,8 @@ function openCart(chat){
     ${cart.map((i,k)=>lineRow(i,`<span class="qty"><button onclick="qty('${chat}',${k},-1)" aria-label="Less">−</button><b>${i.qty}</b><button onclick="qty('${chat}',${k},1)" aria-label="More">+</button></span>`)).join("")}
     <button class="addmore" onclick="closeSheet()">Add more</button>
     <div class="tot"><span>Estimated total</span><b>${usd(cartTotal(chat))}</b></div>
-    <div class="csend"><span class="f">Add a message</span><button onclick="placeOrder('${chat}')" aria-label="Send to business">${I.send}</button></div>
-    <small style="text-align:center">Your cart is sent to ${esc(b.name)} as a message.</small>`;
+    <div class="csend"><span class="f">Add a message</span></div>
+    <button class="go sendcart" onclick="placeOrder('${chat}')">${I.send}<span>Send cart to ${esc(b.name)}</span></button>`;
   sheetOn();
 }
 function qty(chat,k,d){ const c=CARTS[chat]; c[k].qty+=d; if(c[k].qty<=0) c.splice(k,1); syncCart(chat); renderPbar(); c.length ? openCart(chat) : closeSheet(); }
@@ -966,16 +966,8 @@ function renderPbar(){
 }
 function pdpQty(d){
   const it=pdpItem(), cart=CARTS[PDP.chat], k=cart.findIndex(i=>i.key===it.key);
-  if(k<0){
-    if(d<=0) return;
-    /* First add: back to the chat, where the addition shows as a message with a View cart button. */
-    const chat=PDP.chat, price=PRODUCTS[PDP.brand].price;
-    cart.push({ key:it.key, brand:PDP.brand, name:it.name, price, qty:1 });
-    syncCart(chat); openChat(chat,"pop");
-    pushMsg(chat,{html:`<div class="b o first sentcart"><button class="oc" onclick="openCart('${chat}')"><span class="oi">${I.cart}</span><span><b>Added to cart</b><span>${esc(it.name)} · ${usd(price)}</span></span></button><div class="tx2">${meta(now(),true)}</div><div class="btns"><button onclick="openCart('${chat}')">View cart</button></div></div>`});
-    return;
-  }
-  cart[k].qty+=d; if(cart[k].qty<=0) cart.splice(k,1);
+  if(k<0){ if(d>0) cart.push({ key:it.key, brand:PDP.brand, name:it.name, price:PRODUCTS[PDP.brand].price, qty:1 }); }
+  else { cart[k].qty+=d; if(cart[k].qty<=0) cart.splice(k,1); }
   syncCart(PDP.chat); renderPbar();
 }
 function closePdp(){ if(!PDP) return; PDP.from==="catalog" ? openCatalog(PDP.chat,"pop") : openChat(PDP.chat,"pop"); }
