@@ -404,7 +404,11 @@ const CAD = id => `https://storage.googleapis.com/bucket-fi-production-apps-0672
 const BRANDS = {
   nike:{ name:"Nike", av:"N", avc:"#111", lbg:"#000", domain:"nike.com", url:"https://www.nike.com/",
     src:"https://native-ads-dev.appless.workers.dev/6a97885c9e74536944d35d53_dsefds/ad.js",
-    variants:[{n:"Black"},{n:"Coral"},{n:"Lilac"}],
+    /* own: the tag's link is not product-specific, so each color opens its own nike.com product page. */
+    own:true,
+    variants:[{n:"Black",url:"https://www.nike.com/t/universa-womens-high-waisted-7-8-leggings-with-no-front-seam-tTQDxt/HQ6813-010"},
+      {n:"Coral",url:"https://www.nike.com/t/universa-womens-high-waisted-7-8-leggings-with-no-front-seam-tTQDxt/HQ6813-897"},
+      {n:"Lilac",url:"https://www.nike.com/t/universa-womens-high-waisted-7-8-leggings-with-no-front-seam-tTQDxt/HQ6813-527"}],
     purl:"https://www.nike.com/w/womens-universa-clothing-5e1x6z6ymx6z9sh3f" },
   levis:{ name:"Levi's", av:"L", avc:"#c41230", domain:"levi.com", url:"https://www.levi.com/US/en_US/",
     src:"https://native-ads-dev.appless.workers.dev/6a96c6969e74536944c4167f_z64116/ad.js",
@@ -565,6 +569,7 @@ function variantOf(id){ const s=SLOTS[id], b=BRANDS[s.brand]; return b.variants[
    opens whatever URL the tag hands back. The URLs listed in BRANDS are only a fallback if the tag returns none. */
 function shop(id){
   const s=SLOTS[id]; if(!s) return;
+  if(BRANDS[s.brand].own && variantOf(id).url){ openLink(s.brand, variantOf(id).url); return; }
   const f=document.querySelector(`.flick[data-slot="${id}"] iframe`);
   const fallback=()=>{ if(!s.wantCta) return; s.wantCta=0; clearTimeout(s.ctaT); openLink(s.brand, variantOf(id).url || BRANDS[s.brand].purl || BRANDS[s.brand].url); };
   s.wantCta=1; clearTimeout(s.ctaT); s.fallback=fallback;
@@ -629,7 +634,7 @@ window.addEventListener("message", e=>{
   }
   else if(m.type==="switch"){ const v=Math.max(0,Math.min(m.diff, BRANDS[s.brand].variants.length-1)); if(v!==s.variant){ s.variant=v; syncVariant(m.slot); if(s.gest && s.ready) restartBar(); } }
   else if(m.type==="nocta"){ s.fallback&&s.fallback(); }
-  else if(m.type==="cta"){ s.wantCta=0; clearTimeout(s.ctaT); (window.__CTA=window.__CTA||[]).push(s.brand+" -> "+(m.url||"(none)")); const now=Date.now(); if(now-s.lastCta<900) return; s.lastCta=now; openLink(s.brand, m.url || variantOf(m.slot).url || BRANDS[s.brand].purl || BRANDS[s.brand].url); }
+  else if(m.type==="cta"){ s.wantCta=0; clearTimeout(s.ctaT); (window.__CTA=window.__CTA||[]).push(s.brand+" -> "+(m.url||"(none)")); const now=Date.now(); if(now-s.lastCta<900) return; s.lastCta=now; openLink(s.brand, (BRANDS[s.brand].own && variantOf(m.slot).url) || m.url || variantOf(m.slot).url || BRANDS[s.brand].purl || BRANDS[s.brand].url); }
 });
 
 /* ================= shared bits ================= */
@@ -771,8 +776,8 @@ const cartTotal = c => (CARTS[c]||[]).reduce((a,i)=>a+i.qty*i.price,0);
 const SHOP_SM = I.shop.replace('width="22" height="22"','width="17" height="17"');
 const CART_SM = I.cart.replace('width="23" height="23"','width="17" height="17"');
 /* Buttons under a Flick message: the cart is filled from the message itself. */
-function msgBtns(chat, slot, brand){
-  return `<div class="btns"><button onclick="openPdp('${chat}','${brand}','chat',SLOTS['${slot}']?SLOTS['${slot}'].variant:0)">View</button></div>`;
+function msgBtns(chat, slot, brand, shopNow){
+  return `<div class="btns"><button onclick="openPdp('${chat}','${brand}','chat',SLOTS['${slot}']?SLOTS['${slot}'].variant:0)">View</button>${shopNow?`<button onclick="shop('${slot}')">${I.link}Shop now</button>`:""}</div>`;
 }
 function chatBody(c){
   let h="";
@@ -785,7 +790,7 @@ function chatBody(c){
     <div class="b tpl first" id="fmt-promo">
       ${flick(id,"nike",true)}
       <div class="tx"><b>Black Friday is on.</b><br>The Universa training set is in the sale, in three colors made to move with you.<div class="pr">${usd(PRODUCTS.nike.price)}</div>${meta("9:12 AM")}</div>
-      ${msgBtns("nike",id,"nike")}
+      ${msgBtns("nike",id,"nike",true)}
     </div>`;
   } else if(c.id==="macys"){
     const id="mprod"+(++seq);
@@ -948,7 +953,7 @@ function openPdp(chat, brand, from, vi=0, anim="push"){
       <h2 data-pname>${esc(prodName(brand,0))}</h2>
       <div class="pprice">${usd(p.price)}</div>
       <p>${esc(item.ds||"")}</p>
-      <button class="plink" onclick="shop('${PDP.slot}')">${I.link}<span>${esc(b.domain)}</span></button>
+      <button class="plink" onclick="shop('${PDP.slot}')">${I.link}<span>View product at ${esc(b.domain)}</span></button>
     </div>
     <div style="height:110px"></div>
   </div>
