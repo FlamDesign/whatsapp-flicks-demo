@@ -800,7 +800,7 @@ const SHOP_SM = I.shop.replace('width="22" height="22"','width="17" height="17"'
 const CART_SM = I.cart.replace('width="23" height="23"','width="17" height="17"');
 /* Buttons under a Flick message: the cart is filled from the message itself. */
 function msgBtns(chat, slot, brand, shopNow=true){
-  return `<div class="btns"><button onclick="openPdp('${chat}','${brand}','chat',SLOTS['${slot}']?SLOTS['${slot}'].variant:0)">View</button>${shopNow?`<button onclick="shop('${slot}')">${I.link}Shop now</button>`:""}</div>`;
+  return `<div class="btns"><button onclick="openPdp('${chat}','${brand}','chat',SLOTS['${slot}']?SLOTS['${slot}'].variant:0)">View product</button>${shopNow?`<button onclick="shop('${slot}')">${I.link}Shop now</button>`:""}</div>`;
 }
 function chatBody(c){
   let h="";
@@ -969,7 +969,7 @@ function pay(id){
 }
 
 /* ================= Product page =================
-   The route WhatsApp uses: a product message has one "View" button, which opens the product page inside the app.
+   The route WhatsApp uses: a product message has one view button (labelled "View product" here for context), which opens the product page inside the app.
    Adding to the cart happens here, then the cart is sent to the business as a message. */
 let PDP=null;
 function prodName(brand, vi){ const p=PRODUCTS[brand], v=(BRANDS[brand].variants[vi]||BRANDS[brand].variants[0]).n; return p.title ? (v ? `${p.title} in ${v}` : p.title) : v; }
