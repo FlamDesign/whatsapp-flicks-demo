@@ -578,7 +578,8 @@ function variantOf(id){ const s=SLOTS[id], b=BRANDS[s.brand]; return b.variants[
    opens whatever URL the tag hands back. The URLs listed in BRANDS are only a fallback if the tag returns none. */
 function shop(id){
   const s=SLOTS[id]; if(!s) return;
-  if(BRANDS[s.brand].own && variantOf(id).url){ openLink(s.brand, variantOf(id).url); return; }
+  /* A page listed for the option on screen is always more specific than the tag's single link. */
+  if(variantOf(id).url){ openLink(s.brand, variantOf(id).url); return; }
   const f=document.querySelector(`.flick[data-slot="${id}"] iframe`);
   const fallback=()=>{ if(!s.wantCta) return; s.wantCta=0; clearTimeout(s.ctaT); openLink(s.brand, variantOf(id).url || BRANDS[s.brand].purl || BRANDS[s.brand].url); };
   s.wantCta=1; clearTimeout(s.ctaT); s.fallback=fallback;
@@ -632,7 +633,19 @@ window.addEventListener("message", e=>{
   const host=document.querySelector(`.flick[data-slot="${m.slot}"]`);
   if(!host || e.source!==host.querySelector("iframe")?.contentWindow) return;
   (window.__FL=window.__FL||[]).push(m.slot+":"+m.type);
-  if(m.type==="ready" && PDP && m.slot===PDP.slot && PDP.want>0){ const w=PDP.want; PDP.want=0; try{ host.querySelector("iframe").contentWindow.postMessage({flamCmd:"diff",i:w},"*"); }catch(_){} }
+  /* The product page opens on the option that was selected in the message. The player can ignore a press that
+     arrives right as it becomes ready, so keep asking until it confirms the switch. */
+  if(m.type==="ready" && PDP && m.slot===PDP.slot && PDP.want>0){
+    const w=PDP.want, slot=PDP.slot; let n=0;
+    const push=()=>{
+      if(!PDP || PDP.slot!==slot || PDP.want!==w) return;
+      if(n++>=14){ PDP.want=0; s.variant=0; syncVariant(slot); return; }
+      try{ host.querySelector("iframe").contentWindow.postMessage({flamCmd:"diff",i:w},"*"); }catch(_){}
+      setTimeout(push, 350);
+    };
+    push();
+  }
+  if(m.type==="switch" && PDP && m.slot===PDP.slot && PDP.want>0){ if(+m.diff===PDP.want){ PDP.want=0; setTimeout(renderPbar,250); } else return; }
   if(m.type==="ready" && PDP && m.slot===PDP.slot) setTimeout(renderPbar, 300);
   if(m.type==="ready"){ s.ready=true; clearTimeout(s.timer); host.classList.add("rdy"); host.querySelector(".fstate")?.classList.add("hide"); host.querySelector(".fwarn")?.remove(); }
   else if(m.type==="g"){ gesture(m.ph, m.dx*(s.sc||1), m.dy*(s.sc||1)); return; }
@@ -644,7 +657,7 @@ window.addEventListener("message", e=>{
   }
   else if(m.type==="switch"){ const v=Math.max(0,Math.min(m.diff, BRANDS[s.brand].variants.length-1)); if(v!==s.variant){ s.variant=v; syncVariant(m.slot); if(s.gest && s.ready) restartBar(); } }
   else if(m.type==="nocta"){ s.fallback&&s.fallback(); }
-  else if(m.type==="cta"){ s.wantCta=0; clearTimeout(s.ctaT); (window.__CTA=window.__CTA||[]).push(s.brand+" -> "+(m.url||"(none)")); const now=Date.now(); if(now-s.lastCta<900) return; s.lastCta=now; openLink(s.brand, (BRANDS[s.brand].own && variantOf(m.slot).url) || m.url || variantOf(m.slot).url || BRANDS[s.brand].purl || BRANDS[s.brand].url); }
+  else if(m.type==="cta"){ s.wantCta=0; clearTimeout(s.ctaT); (window.__CTA=window.__CTA||[]).push(s.brand+" -> "+(m.url||"(none)")); const now=Date.now(); if(now-s.lastCta<900) return; s.lastCta=now; openLink(s.brand, variantOf(m.slot).url || m.url || variantOf(m.slot).url || BRANDS[s.brand].purl || BRANDS[s.brand].url); }
 });
 
 /* ================= shared bits ================= */
@@ -970,7 +983,7 @@ function openPdp(chat, brand, from, vi=0, anim="push"){
   <div class="scroll pdp">
     ${flick(PDP.slot,brand,true)}
     <div class="pinf">
-      <h2 data-pname>${esc(prodName(brand,0))}</h2>
+      <h2 data-pname>${esc(prodName(brand,vi))}</h2>
       <div class="pprice">${usd(p.price)}</div>
       <p>${esc(item.ds||"")}</p>
       <button class="plink" onclick="shop('${PDP.slot}')">${I.link}<span>View product at ${esc(b.domain)}</span></button>
@@ -978,6 +991,7 @@ function openPdp(chat, brand, from, vi=0, anim="push"){
     <div style="height:170px"></div>
   </div>
   <div class="pbar" id="pbar"></div>`;
+  if(SLOTS[PDP.slot] && vi>0) SLOTS[PDP.slot].variant=vi;
   show("s-pdp", anim); renderPbar();
 }
 function pdpItem(){ const s=SLOTS[PDP.slot]; const name=prodName(PDP.brand, s?s.variant:0); return { name, key:PDP.brand+"|"+name }; }
